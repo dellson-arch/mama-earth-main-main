@@ -58,8 +58,7 @@
   }
 }
 
-/* Removed fade-in animation from App.css */
-/* @keyframes fade-in {
+@keyframes fade-in {
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -72,7 +71,7 @@
 
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
-} */
+}
 
 html {
   scroll-behavior: smooth;
@@ -94,3 +93,6 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #10b981;
 }
+
+/* No specific styles in App.css, Tailwind handles most of it */
+/* This file can be used for global custom CSS if needed */

@@ -1,190 +1,140 @@
-"use client"
-
-import { MessageSquare, Heart, Share2, UserPlus, TrendingUp } from "lucide-react"
-import { Button } from "./ui/Button"
-import { Input } from "./ui/Input"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
-import { Badge } from "./ui/badge"
-import { useState } from "react"
+import { Users, MessageSquare, Award, Leaf, Share2 } from "lucide-react"
+import { Button } from "./ui/Button"
 
 const CommunitySection = () => {
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      author: "Priya Sharma",
-      avatar: "/placeholder.svg?height=40&width=40&text=PS",
-      time: "2 hours ago",
-      content:
-        "Just tried the new Rice Face Wash! My skin feels incredibly soft and bright. Highly recommend it for sensitive skin types. #MamaEarth #SkincareRoutine",
-      likes: 120,
-      comments: 35,
-      shares: 10,
-      tags: ["skincare", "newproduct", "sensitiveskin"],
-    },
-    {
-      id: 2,
-      author: "Rahul Gupta",
-      avatar: "/placeholder.svg?height=40&width=40&text=RG",
-      time: "5 hours ago",
-      content:
-        "My hair fall has significantly reduced after using MamaEarth Onion Hair Oil for a month. This product is a lifesaver! #Haircare #OnionHairOil #NaturalProducts",
-      likes: 98,
-      comments: 21,
-      shares: 7,
-      tags: ["haircare", "hairfall", "natural"],
-    },
-    {
-      id: 3,
-      author: "Anjali Patel",
-      avatar: "/placeholder.svg?height=40&width=40&text=AP",
-      time: "1 day ago",
-      content:
-        "Loving the Ubtan Face Mask! It gives an instant glow and feels so refreshing. Perfect for a weekend pamper session. ✨ #Ubtan #FaceMask #Glowingskin",
-      likes: 150,
-      comments: 40,
-      shares: 15,
-      tags: ["facemask", "ubtan", "glow"],
-    },
-  ])
+  const communityStats = [
+    { icon: <Users className="h-12 w-12 text-green-400" />, value: "150K+", label: "Happy Members" },
+    { icon: <MessageSquare className="h-12 w-12 text-blue-400" />, value: "20K+", label: "Discussions" },
+    { icon: <Award className="h-12 w-12 text-purple-400" />, value: "500+", label: "Events & Workshops" },
+    { icon: <Leaf className="h-12 w-12 text-yellow-400" />, value: "1M+", label: "Trees Planted" },
+  ]
 
-  const [newPostContent, setNewPostContent] = useState("")
-
-  const handlePostSubmit = (e) => {
-    e.preventDefault()
-    if (newPostContent.trim()) {
-      const newPost = {
-        id: posts.length + 1,
-        author: "You (Guest User)", // Placeholder for logged-in user
-        avatar: "/placeholder.svg?height=40&width=40&text=GU",
-        time: "Just now",
-        content: newPostContent.trim(),
-        likes: 0,
-        comments: 0,
-        shares: 0,
-        tags: ["community", "newpost"],
-      }
-      setPosts([newPost, ...posts])
-      setNewPostContent("")
-    }
-  }
+  const testimonials = [
+    {
+      name: "Priya Sharma",
+      quote:
+        "Being part of the MamaEarth community has transformed my skincare routine and connected me with like-minded individuals. The tips and support are invaluable!",
+      avatar: "/placeholder.svg?height=48&width=48",
+    },
+    {
+      name: "Rahul Singh",
+      quote:
+        "I love the focus on natural products and sustainability. The community events are always insightful, and I've learned so much about eco-friendly living.",
+      avatar: "/placeholder.svg?height=48&width=48",
+    },
+    {
+      name: "Anjali Devi",
+      quote:
+        "The MamaEarth community is a safe space to share experiences and get advice. My baby's skin issues improved so much thanks to recommendations from other moms here!",
+      avatar: "/placeholder.svg?height=48&width=48",
+    },
+  ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 pt-24 pb-12 relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl animate-pulse"></div>
-        <div
-          className="absolute bottom-20 right-10 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "2s" }}
-        ></div>
+    <div className="py-12 text-white">
+      <div className="text-center mb-12">
+        <h1 className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
+          Join Our Thriving Community
+        </h1>
+        <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          Connect with fellow natural beauty enthusiasts, share tips, and make a positive impact together.
+        </p>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent">
-            MamaEarth Community
-          </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Connect with other natural beauty enthusiasts, share tips, and discover new favorites!
-          </p>
-        </div>
-
-        {/* Create Post Section */}
-        <Card className="mb-8 bg-gray-800/50 border-gray-700/50 text-white rounded-2xl shadow-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-white">Share Your Experience</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handlePostSubmit} className="space-y-4">
-              <Input
-                placeholder="What's on your mind about natural beauty?"
-                className="w-full bg-gray-700/50 border-gray-600/50 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-purple-500/20 rounded-xl py-3 px-4"
-                value={newPostContent}
-                onChange={(e) => setNewPostContent(e.target.value)}
-              />
-              <Button
-                type="submit"
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 rounded-xl shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300"
-              >
-                <UserPlus className="h-5 w-5 mr-2" />
-                Post to Community
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Community Feed */}
-        <div className="space-y-6">
-          {posts.map((post) => (
-            <Card key={post.id} className="bg-gray-800/50 border-gray-700/50 text-white rounded-2xl shadow-xl">
-              <CardContent className="p-6">
-                <div className="flex items-center mb-4">
-                  <img
-                    src={post.avatar || "/placeholder.svg"}
-                    alt={post.author}
-                    className="w-10 h-10 rounded-full mr-3 border-2 border-purple-500"
-                  />
-                  <div>
-                    <h4 className="font-semibold text-white">{post.author}</h4>
-                    <p className="text-gray-400 text-sm">{post.time}</p>
-                  </div>
-                </div>
-                <p className="text-gray-200 mb-4 leading-relaxed">{post.content}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {post.tags.map((tag, index) => (
-                    <Badge key={index} className="bg-purple-600/20 text-purple-400 border border-purple-600/30">
-                      #{tag}
-                    </Badge>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between text-gray-400 text-sm">
-                  <div className="flex items-center space-x-4">
-                    <button className="flex items-center hover:text-white transition-colors duration-200">
-                      <Heart className="h-4 w-4 mr-1" /> {post.likes} Likes
-                    </button>
-                    <button className="flex items-center hover:text-white transition-colors duration-200">
-                      <MessageSquare className="h-4 w-4 mr-1" /> {post.comments} Comments
-                    </button>
-                    <button className="flex items-center hover:text-white transition-colors duration-200">
-                      <Share2 className="h-4 w-4 mr-1" /> {post.shares} Shares
-                    </button>
-                  </div>
-                  <Button variant="ghost" size="sm" className="text-purple-400 hover:text-white hover:bg-purple-400/10">
-                    View Post
-                  </Button>
-                </div>
-              </CardContent>
+      {/* Community Stats */}
+      <section className="mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {communityStats.map((stat, index) => (
+            <Card
+              key={index}
+              className="glass-effect border border-gray-700/50 shadow-xl p-6 text-center flex flex-col items-center justify-center"
+            >
+              <div className="mb-4">{stat.icon}</div>
+              <CardTitle className="text-4xl font-bold text-white mb-2">{stat.value}</CardTitle>
+              <p className="text-gray-300 text-lg">{stat.label}</p>
             </Card>
           ))}
         </div>
+      </section>
 
-        {/* Trending Topics */}
-        <Card className="mt-12 bg-gray-800/50 border-gray-700/50 text-white rounded-2xl shadow-xl">
+      {/* Testimonials */}
+      <section className="mb-16">
+        <h2 className="text-4xl font-bold text-center mb-10 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          What Our Members Say
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <Card
+              key={index}
+              className="glass-effect border border-gray-700/50 shadow-xl p-6 flex flex-col items-center text-center"
+            >
+              <img
+                src={testimonial.avatar || "/placeholder.svg"}
+                alt={testimonial.name}
+                className="w-16 h-16 rounded-full object-cover mb-4 border-2 border-green-500 shadow-md"
+              />
+              <p className="text-lg italic text-gray-200 mb-4">"{testimonial.quote}"</p>
+              <p className="font-semibold text-green-300">- {testimonial.name}</p>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Call to Action / Join Section */}
+      <section className="text-center mb-16">
+        <Card className="glass-effect border border-gray-700/50 shadow-2xl p-8 max-w-3xl mx-auto">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-white flex items-center">
-              <TrendingUp className="h-6 w-6 mr-2 text-pink-400" />
-              Trending Topics
-            </CardTitle>
+            <CardTitle className="text-3xl font-bold text-white mb-4">Ready to Join Us?</CardTitle>
+            <p className="text-lg text-gray-300">
+              Become a part of a growing family that believes in natural goodness and a sustainable future.
+            </p>
           </CardHeader>
-          <CardContent className="flex flex-wrap gap-3">
-            <Badge className="bg-blue-600/20 text-blue-400 border border-blue-600/30 cursor-pointer hover:bg-blue-600/30">
-              #NaturalSkincare
-            </Badge>
-            <Badge className="bg-blue-600/20 text-blue-400 border border-blue-600/30 cursor-pointer hover:bg-blue-600/30">
-              #HairGrowthTips
-            </Badge>
-            <Badge className="bg-blue-600/20 text-blue-400 border border-blue-600/30 cursor-pointer hover:bg-blue-600/30">
-              #ToxinFree
-            </Badge>
-            <Badge className="bg-blue-600/20 text-blue-400 border border-blue-600/30 cursor-pointer hover:bg-blue-600/30">
-              #BabyCareEssentials
-            </Badge>
-            <Badge className="bg-blue-600/20 text-blue-400 border border-blue-600/30 cursor-pointer hover:bg-blue-600/30">
-              #MamaEarthReviews
-            </Badge>
+          <CardContent className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
+            <Button className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 transform hover:scale-105 text-lg flex items-center justify-center">
+              <Users className="h-5 w-5 mr-2" /> Join Now
+            </Button>
+            <Button
+              variant="outline"
+              className="border-green-500 text-green-400 hover:bg-green-500/10 hover:text-green-300 font-semibold py-3 px-6 rounded-full shadow-lg shadow-green-500/10 transition-all duration-300 transform hover:scale-105 text-lg flex items-center justify-center bg-transparent"
+            >
+              <Share2 className="h-5 w-5 mr-2" /> Share & Invite
+            </Button>
           </CardContent>
         </Card>
-      </div>
+      </section>
+
+      {/* Forum/Discussion Teaser (Placeholder) */}
+      <section className="text-center">
+        <h2 className="text-4xl font-bold text-center mb-10 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          Latest Discussions
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <Card className="glass-effect border border-gray-700/50 shadow-xl p-6 text-left">
+            <CardTitle className="text-xl font-semibold text-white mb-2">
+              Best natural remedies for dry scalp?
+            </CardTitle>
+            <p className="text-gray-300 text-sm mb-3">
+              Looking for effective natural solutions to combat dry and itchy scalp. Any recommendations from the
+              community?
+            </p>
+            <Button variant="link" className="text-green-400 hover:text-green-300 p-0 h-auto">
+              Read More
+            </Button>
+          </Card>
+          <Card className="glass-effect border border-gray-700/50 shadow-xl p-6 text-left">
+            <CardTitle className="text-xl font-semibold text-white mb-2">
+              My journey to chemical-free skincare
+            </CardTitle>
+            <p className="text-gray-300 text-sm mb-3">
+              Sharing my experience transitioning to all-natural skincare products and the amazing results I've seen!
+            </p>
+            <Button variant="link" className="text-green-400 hover:text-green-300 p-0 h-auto">
+              Read More
+            </Button>
+          </Card>
+        </div>
+      </section>
     </div>
   )
 }

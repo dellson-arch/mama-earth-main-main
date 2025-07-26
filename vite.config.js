@@ -1,10 +1,11 @@
-import { defineConfig } from "vite"
-import react from "@vitejs/plugin-react"
 import path from "path"
-// Removed: import tailwindConfig from "./tailwind.config"
+import tailwindcss from "@tailwindcss/vite" // Import tailwindcss plugin
+import react from "@vitejs/plugin-react"
+import { defineConfig } from "vite"
 
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()], // Corrected: Only react() plugin
+  plugins: [react(), tailwindcss()], // Include tailwindcss plugin here
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

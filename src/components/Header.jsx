@@ -2,9 +2,9 @@
 
 import { useState } from "react"
 import { Search, ShoppingCart, Heart, User, Menu, X, Bot } from "lucide-react"
-import { Button } from "./ui/Button" // Corrected import
-import { Input } from "./ui/Input" // Corrected import
-import { Badge } from "./ui/badge" // Corrected import
+import { Button } from "./ui/Button"
+import { Input } from "./ui/Input"
+import { Badge } from "./ui/Badge"
 
 const Header = ({
   onNavigate,

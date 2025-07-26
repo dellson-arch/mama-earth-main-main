@@ -1,97 +1,52 @@
 "use client"
-
-import { ArrowRight, Sparkles, Leaf, Shield, Award } from "lucide-react"
 import { Button } from "./ui/Button"
+import { ArrowRight, Leaf, Sparkles } from "lucide-react"
 
 const HeroSection = ({ onNavigate }) => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-green-900 min-h-screen flex items-center">
-      {/* Animated Background */}
+    <section className="relative h-[calc(100vh-80px)] flex items-center justify-center text-center px-4 sm:px-6 lg:px-8 overflow-hidden">
+      {/* Background elements for visual depth */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-green-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div
-          className="absolute top-40 right-20 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "2s" }}
-        ></div>
-        <div
-          className="absolute bottom-20 left-1/4 w-64 h-64 bg-green-300/10 rounded-full blur-2xl animate-pulse"
-          style={{ animationDelay: "4s" }}
-        ></div>
-        <div
-          className="absolute top-1/2 right-1/3 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "6s" }}
-        ></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-green-500/10 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+        <div className="absolute top-1/2 right-1/4 w-72 h-72 bg-blue-500/10 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-purple-500/10 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="text-center lg:text-left space-y-8">
-            <div className="inline-flex items-center px-4 py-2 bg-green-600/20 text-green-400 border border-green-600/30 rounded-full text-sm font-medium backdrop-blur-sm">
-              <Sparkles className="h-4 w-4 mr-2" />
-              100% Natural & Toxin-Free
-            </div>
-
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-tight">
-              Natural Beauty,{" "}
-              <span className="bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 bg-clip-text text-transparent">
-                Made Safe
-              </span>
-            </h1>
-
-            <p className="text-xl sm:text-2xl text-gray-300 leading-relaxed max-w-2xl">
-              Discover the goodness of nature with MamaEarth's range of toxin-free, natural products for you and your
-              family. Trusted by millions worldwide.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
-              <Button
-                onClick={() => onNavigate("analyzer")}
-                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold px-8 py-4 rounded-2xl shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 transform hover:scale-105 text-lg"
-              >
-                <Sparkles className="h-5 w-5 mr-2" />
-                Find My Products
-              </Button>
-              <Button
-                onClick={() => onNavigate("products")}
-                variant="outline"
-                className="text-white border-2 border-white/30 hover:bg-white/10 hover:border-white/50 backdrop-blur-sm font-semibold px-8 py-4 rounded-2xl text-lg transition-all duration-300 transform hover:scale-105"
-              >
-                Browse All
-                <ArrowRight className="h-5 w-5 ml-2" />
-              </Button>
-            </div>
-
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap items-center gap-6 justify-center lg:justify-start pt-8">
-              <div className="flex items-center space-x-2 text-gray-300">
-                <Shield className="h-5 w-5 text-green-400" />
-                <span className="text-sm font-medium">Dermatologically Tested</span>
-              </div>
-              <div className="flex items-center space-x-2 text-gray-300">
-                <Award className="h-5 w-5 text-green-400" />
-                <span className="text-sm font-medium">Award Winning</span>
-              </div>
-              <div className="flex items-center space-x-2 text-gray-300">
-                <Leaf className="h-5 w-5 text-green-400" />
-                <span className="text-sm font-medium">100% Natural</span>
-              </div>
-            </div>
+      <div className="relative z-10 max-w-4xl mx-auto">
+        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-6 drop-shadow-lg">
+          Discover{" "}
+          <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
+            Nature's Goodness
+          </span>{" "}
+          for You & Your Family
+        </h1>
+        <p className="text-lg sm:text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
+          Toxin-free, natural products for baby care, beauty, and personal care. Because you deserve the best,
+          naturally.
+        </p>
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <Button
+            onClick={() => onNavigate("products")}
+            className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 transform hover:scale-105 text-lg flex items-center justify-center"
+          >
+            Shop Now <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+          <Button
+            onClick={() => onNavigate("analyzer")}
+            variant="outline"
+            className="border-green-500 text-green-400 hover:bg-green-500/10 hover:text-green-300 font-semibold py-3 px-8 rounded-full shadow-lg shadow-green-500/10 transition-all duration-300 transform hover:scale-105 text-lg flex items-center justify-center"
+          >
+            <Sparkles className="h-5 w-5 mr-2" /> Skin Analyzer
+          </Button>
+        </div>
+        <div className="mt-12 flex items-center justify-center space-x-6 text-gray-300">
+          <div className="flex items-center space-x-2">
+            <Leaf className="h-6 w-6 text-green-400" />
+            <span className="font-medium">MadeSafe™ Certified</span>
           </div>
-
-          <div className="relative">
-            <div className="relative group">
-              <img
-                src="/placeholder.svg?height=600&width=600&text=Natural+Skincare+Hero"
-                alt="Natural skincare products"
-                className="w-full h-auto rounded-3xl shadow-2xl group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute -top-6 -right-6 bg-gradient-to-r from-green-600 to-green-700 text-white p-4 rounded-2xl shadow-xl animate-bounce">
-                <Leaf className="h-8 w-8" />
-              </div>
-              <div className="absolute -bottom-6 -left-6 bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-2xl shadow-xl animate-pulse">
-                <Shield className="h-8 w-8" />
-              </div>
-            </div>
+          <div className="flex items-center space-x-2">
+            <img src="/placeholder.svg?height=24&width=24" alt="Tree Planted" className="h-6 w-6" />
+            <span className="font-medium">Trees Planted for Every Order</span>
           </div>
         </div>
       </div>

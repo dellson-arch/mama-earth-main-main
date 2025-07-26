@@ -17,6 +17,7 @@ import TreeTracker from "./components/TreeTracker"
 import CommunitySection from "./components/CommunitySection"
 import ProductDetailModal from "./components/ProductDetailModal"
 import AboutUsPage from "./components/AboutUsPage" // New import
+import "./animation.css" // Import custom animations
 
 function App() {
   const [currentPage, setCurrentPage] = useState("home")

@@ -1,353 +1,295 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, Grid, List, ChevronDown } from "lucide-react"
-import { Button } from "./ui/Button"
-import { Input } from "./ui/Input"
-import { Badge } from "./ui/Badge"
 import ProductCard from "./ProductCard"
+import { Input } from "./ui/Input"
+import { Search, SlidersHorizontal } from "lucide-react"
+import { Button } from "./ui/Button"
+import { cn } from "../lib/utils"
+
+const allProducts = [
+  {
+    id: 1,
+    name: "Onion Hair Oil",
+    image: "/placeholder.svg?height=200&width=200",
+    price: 399,
+    rating: 4.5,
+    reviews: 1200,
+    category: "Hair Care",
+    description: "Reduces hair fall and promotes hair growth. Enriched with Onion & Redensyl.",
+  },
+  {
+    id: 2,
+    name: "Ubtan Face Wash",
+    image: "/placeholder.svg?height=200&width=200",
+    price: 249,
+    rating: 4.7,
+    reviews: 1500,
+    category: "Skin Care",
+    description: "For tan removal and glowing skin. Contains Turmeric & Saffron.",
+  },
+  {
+    id: 3,
+    name: "Tea Tree Face Serum",
+    image: "/placeholder.svg?height=200&width=200",
+    price: 499,
+    rating: 4.3,
+    reviews: 900,
+    category: "Skin Care",
+    description: "Controls acne and pimples. With Tea Tree & Salicylic Acid.",
+  },
+  {
+    id: 4,
+    name: "Vitamin C Daily Glow Face Cream",
+    image: "/placeholder.svg?height=200&width=200",
+    price: 349,
+    rating: 4.6,
+    reviews: 1100,
+    category: "Skin Care",
+    description: "For radiant skin and even tone. Infused with Vitamin C & Turmeric.",
+  },
+  {
+    id: 5,
+    name: "Rice Water Shampoo",
+    image: "/placeholder.svg?height=200&width=200",
+    price: 349,
+    rating: 4.4,
+    reviews: 850,
+    category: "Hair Care",
+    description: "Improves hair elasticity and strength. With Rice Water & Keratin.",
+  },
+  {
+    id: 6,
+    name: "Aloe Vera Gel",
+    image: "/placeholder.svg?height=200&width=200",
+    price: 199,
+    rating: 4.8,
+    reviews: 2000,
+    category: "Skin Care",
+    description: "Soothing and hydrating for skin and hair. Pure Aloe Vera.",
+  },
+  {
+    id: 7,
+    name: "Milky Soft Baby Lotion",
+    image: "/placeholder.svg?height=200&width=200",
+    price: 299,
+    rating: 4.9,
+    reviews: 1800,
+    category: "Baby Care",
+    description: "Gentle moisturization for baby's delicate skin. Milk & Oats.",
+  },
+  {
+    id: 8,
+    name: "Charcoal Face Mask",
+    image: "/placeholder.svg?height=200&width=200",
+    price: 399,
+    rating: 4.2,
+    reviews: 750,
+    category: "Skin Care",
+    description: "Detoxifies skin and removes impurities. Activated Charcoal & Coffee.",
+  },
+  {
+    id: 9,
+    name: "Argan Hair Mask",
+    image: "/placeholder.svg?height=200&width=200",
+    price: 599,
+    rating: 4.6,
+    reviews: 600,
+    category: "Hair Care",
+    description: "Deep conditioning for frizzy and damaged hair. Argan Oil & Milk Protein.",
+  },
+  {
+    id: 10,
+    name: "CoCo Body Lotion",
+    image: "/placeholder.svg?height=200&width=200",
+    price: 279,
+    rating: 4.5,
+    reviews: 950,
+    category: "Body Care",
+    description: "Intense moisturization with the goodness of Coffee & Cocoa.",
+  },
+]
+
+const categories = ["All", "Hair Care", "Skin Care", "Baby Care", "Body Care", "Makeup", "Wellness"]
+const sortByOptions = ["Relevance", "Price: Low to High", "Price: High to Low", "Rating"]
 
 const ProductsPage = ({ onAddToCart, onAddToWishlist, wishlistItems, searchQuery, setSearchQuery, onProductClick }) => {
-  const [filteredProducts, setFilteredProducts] = useState([])
-  const [selectedCategory, setSelectedCategory] = useState("all")
-  const [sortBy, setSortBy] = useState("popularity")
-  const [viewMode, setViewMode] = useState("grid")
-  const [priceRange, setPriceRange] = useState("all")
-
-  const allProducts = [
-    {
-      id: "1",
-      name: "Vitamin C Face Serum",
-      price: 599,
-      originalPrice: 799,
-      rating: 4.8,
-      reviews: 2847,
-      category: "skincare",
-      isBestseller: true,
-      image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=300&fit=crop",
-      description: "Brightening serum with natural Vitamin C for glowing skin",
-      benefits: ["Brightens skin", "Reduces dark spots", "Anti-aging", "Natural ingredients"],
-      ingredients: ["Vitamin C", "Hyaluronic Acid", "Niacinamide", "Aloe Vera"],
-    },
-    {
-      id: "2",
-      name: "Onion Hair Oil",
-      price: 349,
-      originalPrice: 449,
-      rating: 4.6,
-      reviews: 1923,
-      category: "haircare",
-      isNew: true,
-      image: "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=300&h=300&fit=crop",
-      description: "Nourishing hair oil with onion extract for stronger hair",
-      benefits: ["Reduces hair fall", "Promotes growth", "Strengthens roots", "Natural formula"],
-      ingredients: ["Onion Extract", "Coconut Oil", "Argan Oil", "Rosemary"],
-    },
-    {
-      id: "3",
-      name: "Ubtan Face Wash",
-      price: 199,
-      originalPrice: 249,
-      rating: 4.7,
-      reviews: 3421,
-      category: "skincare",
-      isBestseller: true,
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop",
-      description: "Traditional ubtan formula for deep cleansing and glow",
-      benefits: ["Deep cleansing", "Natural glow", "Removes tan", "Gentle formula"],
-      ingredients: ["Turmeric", "Chickpea Flour", "Sandalwood", "Rose Water"],
-    },
-    {
-      id: "4",
-      name: "Rice Face Wash",
-      price: 199,
-      originalPrice: 249,
-      rating: 4.5,
-      reviews: 1567,
-      category: "skincare",
-      isNew: true,
-      image: "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=300&h=300&fit=crop",
-      description: "Gentle rice-based cleanser for soft and smooth skin",
-      benefits: ["Gentle cleansing", "Softens skin", "Brightening", "Suitable for all skin types"],
-      ingredients: ["Rice Water", "Niacinamide", "Glycerin", "Natural Extracts"],
-    },
-    {
-      id: "5",
-      name: "Argan Hair Mask",
-      price: 449,
-      originalPrice: 599,
-      rating: 4.4,
-      reviews: 1234,
-      category: "haircare",
-      image: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=300&h=300&fit=crop",
-      description: "Deep conditioning mask with argan oil for damaged hair",
-      benefits: ["Deep conditioning", "Repairs damage", "Adds shine", "Strengthens hair"],
-      ingredients: ["Argan Oil", "Keratin", "Shea Butter", "Vitamin E"],
-    },
-    {
-      id: "6",
-      name: "Tea Tree Face Wash",
-      price: 249,
-      originalPrice: 299,
-      rating: 4.3,
-      reviews: 987,
-      category: "skincare",
-      image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=300&h=300&fit=crop",
-      description: "Purifying face wash with tea tree oil for acne-prone skin",
-      benefits: ["Controls acne", "Purifies skin", "Reduces oiliness", "Natural antibacterial"],
-      ingredients: ["Tea Tree Oil", "Salicylic Acid", "Neem", "Aloe Vera"],
-    },
-    {
-      id: "7",
-      name: "Coconut Body Lotion",
-      price: 299,
-      originalPrice: 399,
-      rating: 4.6,
-      reviews: 2156,
-      category: "bodycare",
-      image: "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=300&h=300&fit=crop",
-      description: "Moisturizing body lotion with coconut oil for soft skin",
-      benefits: ["Deep moisturizing", "Long-lasting hydration", "Natural fragrance", "Non-greasy"],
-      ingredients: ["Coconut Oil", "Shea Butter", "Glycerin", "Vitamin E"],
-    },
-    {
-      id: "8",
-      name: "Charcoal Face Mask",
-      price: 199,
-      originalPrice: 249,
-      rating: 4.2,
-      reviews: 876,
-      category: "skincare",
-      image: "https://images.unsplash.com/photo-1556228720-da4ac2b4d50b?w=300&h=300&fit=crop",
-      description: "Detoxifying charcoal mask for deep pore cleansing",
-      benefits: ["Deep cleansing", "Removes blackheads", "Detoxifies", "Minimizes pores"],
-      ingredients: ["Activated Charcoal", "Bentonite Clay", "Tea Tree Oil", "Witch Hazel"],
-    },
-  ]
-
-  const categories = [
-    { id: "all", name: "All Products", count: allProducts.length },
-    { id: "skincare", name: "Skincare", count: allProducts.filter((p) => p.category === "skincare").length },
-    { id: "haircare", name: "Haircare", count: allProducts.filter((p) => p.category === "haircare").length },
-    { id: "bodycare", name: "Bodycare", count: allProducts.filter((p) => p.category === "bodycare").length },
-  ]
+  const [filteredProducts, setFilteredProducts] = useState(allProducts)
+  const [selectedCategory, setSelectedCategory] = useState("All")
+  const [sortBy, setSortBy] = useState("Relevance")
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false)
 
   useEffect(() => {
-    let filtered = allProducts
-
-    // Filter by category
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter((product) => product.category === selectedCategory)
-    }
+    let products = [...allProducts]
 
     // Filter by search query
     if (searchQuery) {
-      filtered = filtered.filter(
+      products = products.filter(
         (product) =>
           product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.description.toLowerCase().includes(searchQuery.toLowerCase()),
+          product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.category.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     }
 
-    // Filter by price range
-    if (priceRange !== "all") {
-      switch (priceRange) {
-        case "under-200":
-          filtered = filtered.filter((product) => product.price < 200)
-          break
-        case "200-500":
-          filtered = filtered.filter((product) => product.price >= 200 && product.price <= 500)
-          break
-        case "above-500":
-          filtered = filtered.filter((product) => product.price > 500)
-          break
-      }
+    // Filter by category
+    if (selectedCategory !== "All") {
+      products = products.filter((product) => product.category === selectedCategory)
     }
 
     // Sort products
     switch (sortBy) {
-      case "price-low":
-        filtered.sort((a, b) => a.price - b.price)
+      case "Price: Low to High":
+        products.sort((a, b) => a.price - b.price)
         break
-      case "price-high":
-        filtered.sort((a, b) => b.price - a.price)
+      case "Price: High to Low":
+        products.sort((a, b) => b.price - a.price)
         break
-      case "rating":
-        filtered.sort((a, b) => b.rating - a.rating)
+      case "Rating":
+        products.sort((a, b) => b.rating - a.rating)
         break
-      case "newest":
-        filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0))
-        break
+      case "Relevance":
       default:
-        filtered.sort((a, b) => b.reviews - a.reviews)
+        // No specific sort, maintain original order or a default relevance
+        break
     }
 
-    setFilteredProducts(filtered)
-  }, [selectedCategory, searchQuery, sortBy, priceRange])
+    setFilteredProducts(products)
+  }, [searchQuery, selectedCategory, sortBy])
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value)
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 pt-24 pb-12 relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-green-500/5 rounded-full blur-3xl animate-pulse"></div>
-        <div
-          className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "2s" }}
-        ></div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 pt-20 pb-8 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
+          Our Products
+        </h1>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-green-100 to-white bg-clip-text text-transparent">
-            Natural Products
-          </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Discover our complete range of natural and organic beauty products
-          </p>
-        </div>
-
-        {/* Search and Filters */}
-        <div className="mb-8 space-y-6">
-          {/* Search Bar */}
-          <div className="max-w-md mx-auto">
-            <div className="relative group">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-green-400 transition-colors duration-300" />
-              <Input
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-gray-800/50 border-gray-700/50 text-white placeholder-gray-400 focus:border-green-500 focus:ring-green-500/20 rounded-2xl backdrop-blur-sm transition-all duration-300"
-              />
-            </div>
+        {/* Search and Filter/Sort Controls */}
+        <div className="flex flex-col md:flex-row items-center justify-between mb-8 space-y-4 md:space-y-0 md:space-x-4">
+          <div className="relative w-full md:flex-1">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="w-full pl-12 pr-4 py-3 bg-gray-800/50 border-gray-700/50 text-white placeholder-gray-400 focus:border-green-500 focus:ring-green-500/20 rounded-2xl backdrop-blur-sm"
+            />
           </div>
 
-          {/* Categories */}
-          <div className="flex flex-wrap justify-center gap-3">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`px-6 py-3 rounded-2xl font-medium transition-all duration-300 ${
-                  selectedCategory === category.id
-                    ? "bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg shadow-green-500/25"
-                    : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 hover:text-white"
-                }`}
-              >
-                {category.name}
-                <Badge className="ml-2 bg-white/20 text-xs">{category.count}</Badge>
-              </button>
-            ))}
-          </div>
-
-          {/* Filters and Sort */}
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center space-x-4">
-              {/* Price Filter */}
-              <div className="relative">
-                <select
-                  value={priceRange}
-                  onChange={(e) => setPriceRange(e.target.value)}
-                  className="appearance-none bg-gray-800/50 border border-gray-700/50 text-white px-4 py-2 pr-8 rounded-xl focus:border-green-500 focus:ring-green-500/20 transition-all duration-300"
+          <div className="flex space-x-4">
+            {/* Category Filter (Desktop) */}
+            <div className="hidden md:flex space-x-2">
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  variant={selectedCategory === category ? "default" : "outline"}
+                  onClick={() => setSelectedCategory(category)}
+                  className={cn(
+                    "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300",
+                    selectedCategory === category
+                      ? "bg-green-600 text-white hover:bg-green-700"
+                      : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border-gray-700/50",
+                  )}
                 >
-                  <option value="all">All Prices</option>
-                  <option value="under-200">Under ₹200</option>
-                  <option value="200-500">₹200 - ₹500</option>
-                  <option value="above-500">Above ₹500</option>
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-              </div>
-
-              {/* Sort */}
-              <div className="relative">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="appearance-none bg-gray-800/50 border border-gray-700/50 text-white px-4 py-2 pr-8 rounded-xl focus:border-green-500 focus:ring-green-500/20 transition-all duration-300"
-                >
-                  <option value="popularity">Most Popular</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Highest Rated</option>
-                  <option value="newest">Newest First</option>
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-              </div>
+                  {category}
+                </Button>
+              ))}
             </div>
 
-            {/* View Mode */}
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`p-2 rounded-lg transition-all duration-300 ${
-                  viewMode === "grid" ? "bg-green-600 text-white" : "bg-gray-800/50 text-gray-400 hover:text-white"
-                }`}
-              >
-                <Grid className="h-5 w-5" />
-              </button>
-              <button
-                onClick={() => setViewMode("list")}
-                className={`p-2 rounded-lg transition-all duration-300 ${
-                  viewMode === "list" ? "bg-green-600 text-white" : "bg-gray-800/50 text-gray-400 hover:text-white"
-                }`}
-              >
-                <List className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Results Count */}
-        <div className="mb-8">
-          <p className="text-gray-400 text-center">
-            Showing {filteredProducts.length} of {allProducts.length} products
-          </p>
-        </div>
-
-        {/* Products Grid */}
-        <div
-          className={`grid gap-8 ${
-            viewMode === "grid"
-              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-              : "grid-cols-1 max-w-4xl mx-auto"
-          }`}
-        >
-          {filteredProducts.map((product, index) => (
-            <div
-              key={product.id}
-              className="transform transition-all duration-500 hover:scale-105"
-              style={{ animationDelay: `${index * 0.1}s` }}
+            {/* Mobile Filter Button */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="md:hidden bg-gray-800/50 border-gray-700/50 text-gray-300 hover:bg-gray-700/50"
+              onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
             >
-              <ProductCard
-                product={product}
-                onAddToCart={onAddToCart}
-                onAddToWishlist={onAddToWishlist}
-                isInWishlist={wishlistItems.some((item) => item.id === product.id)}
-                onProductClick={onProductClick}
-              />
+              <SlidersHorizontal className="h-5 w-5" />
+            </Button>
+
+            {/* Sort By */}
+            <div className="relative">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="appearance-none bg-gray-800/50 border border-gray-700/50 text-white py-3 pl-4 pr-10 rounded-2xl focus:outline-none focus:border-green-500 focus:ring-green-500/20 transition-all duration-300 cursor-pointer"
+              >
+                {sortByOptions.map((option) => (
+                  <option key={option} value={option}>
+                    Sort by: {option}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
             </div>
-          ))}
+          </div>
         </div>
 
-        {/* No Results */}
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-16">
-            <div className="w-24 h-24 mx-auto mb-6 bg-gray-800/50 rounded-full flex items-center justify-center">
-              <Search className="h-12 w-12 text-gray-400" />
+        {/* Mobile Filter Panel */}
+        {isFilterPanelOpen && (
+          <div className="md:hidden bg-gray-900/90 backdrop-blur-md rounded-xl p-4 mb-6 border border-gray-700/50">
+            <h3 className="text-lg font-semibold text-white mb-3">Categories</h3>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  variant={selectedCategory === category ? "default" : "outline"}
+                  onClick={() => setSelectedCategory(category)}
+                  className={cn(
+                    "px-3 py-1 rounded-lg text-sm font-medium",
+                    selectedCategory === category
+                      ? "bg-green-600 text-white"
+                      : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border-gray-700/50",
+                  )}
+                >
+                  {category}
+                </Button>
+              ))}
             </div>
-            <h3 className="text-2xl font-semibold text-white mb-2">No products found</h3>
-            <p className="text-gray-400 mb-6">Try adjusting your search or filter criteria</p>
+            <Button
+              className="w-full bg-green-600 hover:bg-green-700 text-white rounded-xl"
+              onClick={() => setIsFilterPanelOpen(false)}
+            >
+              Apply Filters
+            </Button>
+          </div>
+        )}
+
+        {/* Product Grid */}
+        {filteredProducts.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-xl text-gray-400">No products found matching your criteria.</p>
             <Button
               onClick={() => {
                 setSearchQuery("")
-                setSelectedCategory("all")
-                setPriceRange("all")
+                setSelectedCategory("All")
+                setSortBy("Relevance")
               }}
-              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold px-8 py-3 rounded-xl shadow-lg shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300"
+              className="mt-6 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold py-2 px-6 rounded-full"
             >
               Clear Filters
             </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                addToCart={onAddToCart}
+                addToWishlist={onAddToWishlist}
+                isInWishlist={wishlistItems.some((item) => item.id === product.id)}
+                onProductClick={onProductClick}
+              />
+            ))}
           </div>
         )}
       </div>

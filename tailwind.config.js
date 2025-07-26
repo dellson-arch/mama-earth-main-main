@@ -52,12 +52,18 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        slideInRight: {
+          "0%": { transform: "translateX(100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        pulse: "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        bounce: "bounce 1s infinite",
+        slideInRight: "slideInRight 0.5s ease-out forwards",
+      },
+      backgroundImage: {
+        "hero-pattern": "url('/placeholder.svg?height=1080&width=1920')",
       },
     },
   },

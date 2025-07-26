@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Search, ShoppingCart, Heart, User, Menu, X, Bot } from "lucide-react"
 import { Button } from "./ui/Button"
 import { Input } from "./ui/Input"
-import { Badge } from "./ui/Badge"
+import { Badge } from "./ui/badge"
 
 const Header = ({
   onNavigate,
@@ -33,6 +33,7 @@ const Header = ({
     { id: "products", label: "Products", active: currentPage === "products" },
     { id: "analyzer", label: "Skin Analyzer", active: currentPage === "analyzer" },
     { id: "community", label: "Community", active: currentPage === "community" },
+    { id: "about", label: "About Us", active: currentPage === "about" }, // Added About Us
     // Only show Impact if user is signed in
     ...(user ? [{ id: "impact", label: "Impact", active: currentPage === "impact" }] : []),
   ]

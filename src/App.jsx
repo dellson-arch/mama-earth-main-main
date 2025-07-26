@@ -16,6 +16,7 @@ import AIAssistant from "./components/AIAssistant"
 import TreeTracker from "./components/TreeTracker"
 import CommunitySection from "./components/CommunitySection"
 import ProductDetailModal from "./components/ProductDetailModal"
+import AboutUsPage from "./components/AboutUsPage" // New import
 
 function App() {
   const [currentPage, setCurrentPage] = useState("home")
@@ -292,7 +293,15 @@ function App() {
                 <h1 className="text-4xl font-bold text-white mb-4">Your Environmental Impact</h1>
                 <p className="text-xl text-gray-400">See how you're making a difference with every purchase</p>
               </div>
-              <TreeTracker user={user} />
+              <TreeTracker user={user} onNavigate={setCurrentPage} />
+            </div>
+          </div>
+        )
+      case "about": // New case for About Us page
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 pt-20 pb-8">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <AboutUsPage onNavigate={setCurrentPage} />
             </div>
           </div>
         )

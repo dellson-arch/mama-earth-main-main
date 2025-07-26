@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Badge } from "./ui/Badge"
 
 const SkinHairAnalyzer = ({ onNavigate, setUserProfile, showNotification, setRecommendations }) => {
-  // Removed setIsLoading
   const [currentStep, setCurrentStep] = useState(1)
   const [analysisType, setAnalysisType] = useState("")
   const [uploadedImage, setUploadedImage] = useState(null)
@@ -122,7 +121,6 @@ const SkinHairAnalyzer = ({ onNavigate, setUserProfile, showNotification, setRec
 
   const analyzeImage = async () => {
     setIsAnalyzing(true)
-    // setIsLoading(true) // Removed global loading
 
     // Simulate AI analysis with realistic delay
     setTimeout(() => {
@@ -187,7 +185,6 @@ const SkinHairAnalyzer = ({ onNavigate, setUserProfile, showNotification, setRec
         ...userAnswers,
       })
       setIsAnalyzing(false)
-      // setIsLoading(false) // Removed global loading
       setCurrentStep(4)
       showNotification("Analysis complete! Check your personalized recommendations 🎉", "success")
     }, 3000)

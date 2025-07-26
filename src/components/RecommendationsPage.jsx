@@ -12,7 +12,6 @@ const RecommendationsPage = ({
   userProfile,
   wishlistItems = [],
   recommendations = [],
-  onProductClick,
 }) => {
   // Default recommendations if none provided
   const defaultRecommendations = [
@@ -134,8 +133,7 @@ const RecommendationsPage = ({
               {displayRecommendations.map((product) => (
                 <Card
                   key={product.id}
-                  className="group hover:shadow-lg transition-all duration-300 overflow-hidden glass-effect border-gray-700 cursor-pointer"
-                  onClick={() => onProductClick(product)}
+                  className="group hover:shadow-lg transition-all duration-300 overflow-hidden glass-effect border-gray-700"
                 >
                   <div className="relative overflow-hidden">
                     <img
@@ -148,10 +146,7 @@ const RecommendationsPage = ({
                       AI Recommended
                     </Badge>
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        addToWishlist(product)
-                      }}
+                      onClick={() => addToWishlist(product)}
                       className={`absolute top-2 right-2 p-2 rounded-full transition-colors ${
                         isInWishlist(product.id) ? "bg-red-500 text-white" : "bg-white/20 text-white hover:bg-red-500"
                       }`}
@@ -199,10 +194,7 @@ const RecommendationsPage = ({
                       </div>
 
                       <Button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          addToCart(product)
-                        }}
+                        onClick={() => addToCart(product)}
                         className="w-full bg-green-600 hover:bg-green-700 text-white"
                       >
                         <ShoppingCart className="h-4 w-4 mr-2" />

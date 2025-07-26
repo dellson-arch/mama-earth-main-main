@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import Header from "./components/Header"
 import HomePage from "./components/HomePage"
 import ProductsPage from "./components/ProductsPage"
-import ProductDetailPage from "./components/ProductDetailPage"
 import WishlistPage from "./components/WishlistPage"
 import SignInPage from "./components/SignInPage"
 import CheckoutPage from "./components/CheckoutPage"
@@ -16,76 +15,11 @@ import NotificationToast from "./components/NotificationToast"
 import AIAssistant from "./components/AIAssistant"
 import TreeTracker from "./components/TreeTracker"
 import CommunitySection from "./components/CommunitySection"
-import LoadingPage from "./components/LoadingPage"
-import OfflinePage from "./components/OfflinePage"
-
-const ProfilePage = ({ user, onNavigate }) => (
-  <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 pt-24 pb-8">
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="glass-effect rounded-2xl p-8 border border-gray-700/50 animate-fade-in-up">
-        <h1 className="text-3xl font-bold gradient-text mb-6">My Profile</h1>
-        <div className="space-y-6">
-          <div className="flex items-center space-x-4">
-            <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white text-2xl font-bold animate-pulse-glow">
-              {user?.name?.charAt(0) || "U"}
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-white">{user?.name || "User"}</h2>
-              <p className="text-gray-400">{user?.email || "user@example.com"}</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="glass-effect p-6 rounded-xl border border-gray-700/50 hover-lift">
-              <h3 className="text-lg font-semibold text-white mb-2">Account Info</h3>
-              <p className="text-gray-400">
-                Member since: {new Date(user?.joinDate || Date.now()).toLocaleDateString()}
-              </p>
-            </div>
-            <div className="glass-effect p-6 rounded-xl border border-gray-700/50 hover-lift">
-              <h3 className="text-lg font-semibold text-white mb-2">Environmental Impact</h3>
-              <p className="text-green-400 font-bold">{user?.treesPlanted || 0} trees planted</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-)
-
-const OrdersPage = ({ user, onNavigate }) => (
-  <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 pt-24 pb-8">
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="glass-effect rounded-2xl p-8 border border-gray-700/50 animate-fade-in-up">
-        <h1 className="text-3xl font-bold gradient-text mb-6">My Orders</h1>
-        <div className="text-center py-12">
-          <div className="w-24 h-24 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse-glow">
-            <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-              />
-            </svg>
-          </div>
-          <h3 className="text-xl font-semibold text-white mb-2">No orders yet</h3>
-          <p className="text-gray-400 mb-6">Start shopping to see your orders here</p>
-          <button
-            onClick={() => onNavigate("products")}
-            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 transform hover:scale-105 btn-ripple"
-          >
-            Start Shopping
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-)
+// import LoadingSpinner from "./components/LoadingSpinner" // Removed as per request
 
 function App() {
   const [currentPage, setCurrentPage] = useState("home")
-  const [previousPage, setPreviousPage] = useState("home")
-  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [pageHistory, setPageHistory] = useState(["home"]) // Initialize with home
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isAIAssistantOpen, setIsAIAssistantOpen] = useState(false)
   const [cartItems, setCartItems] = useState([])
@@ -95,56 +29,26 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("")
   const [userProfile, setUserProfile] = useState(null)
   const [recommendations, setRecommendations] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isOnline, setIsOnline] = useState(navigator.onLine)
-  const [loadingProgress, setLoadingProgress] = useState(0)
+  // Removed isTransitioning state as per request for instant transitions
 
-  // SUPER SIMPLE LOADING - NO COMPLEX LOGIC
+  // Load data from localStorage
   useEffect(() => {
-    const timer = setInterval(() => {
-      setLoadingProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(timer)
-          setTimeout(() => setIsLoading(false), 800) // Slightly longer for better UX
-          return 100
-        }
-        return prev + 2 // Increase by 2% every 100ms = 5 seconds total
-      })
-    }, 100)
+    const savedCart = localStorage.getItem("mamaearth-cart")
+    const savedWishlist = localStorage.getItem("mamaearth-wishlist")
+    const savedUser = localStorage.getItem("mamaearth-current-user")
+    const savedProfile = localStorage.getItem("mamaearth-profile")
 
-    return () => clearInterval(timer)
-  }, [])
-
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true)
-    const handleOffline = () => setIsOnline(false)
-
-    window.addEventListener("online", handleOnline)
-    window.addEventListener("offline", handleOffline)
-
-    return () => {
-      window.removeEventListener("online", handleOnline)
-      window.removeEventListener("offline", handleOffline)
+    if (savedCart) setCartItems(JSON.parse(savedCart))
+    if (savedWishlist) setWishlistItems(JSON.parse(savedWishlist))
+    if (savedUser) {
+      const currentUser = JSON.parse(savedUser)
+      setUser(currentUser)
     }
-  }, [])
+    if (savedProfile) setUserProfile(JSON.parse(savedProfile))
 
-  useEffect(() => {
-    try {
-      const savedCart = localStorage.getItem("mamaearth-cart")
-      const savedWishlist = localStorage.getItem("mamaearth-wishlist")
-      const savedUser = localStorage.getItem("mamaearth-user")
-      const savedProfile = localStorage.getItem("mamaearth-profile")
-
-      if (savedCart) setCartItems(JSON.parse(savedCart))
-      if (savedWishlist) setWishlistItems(JSON.parse(savedWishlist))
-      if (savedUser) setUser(JSON.parse(savedUser))
-      if (savedProfile) setUserProfile(JSON.parse(savedProfile))
-    } catch (error) {
-      console.error("Error loading saved data:", error)
-    }
-
+    // Listen for custom navigation events
     const handleNavigateToAnalyzer = () => {
-      setCurrentPage("analyzer")
+      handleNavigate("analyzer") // Use the new handleNavigate
       setIsAIAssistantOpen(false)
     }
 
@@ -152,6 +56,7 @@ function App() {
     return () => window.removeEventListener("navigate-to-analyzer", handleNavigateToAnalyzer)
   }, [])
 
+  // Save to localStorage
   useEffect(() => {
     localStorage.setItem("mamaearth-cart", JSON.stringify(cartItems))
   }, [cartItems])
@@ -162,9 +67,9 @@ function App() {
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem("mamaearth-user", JSON.stringify(user))
+      localStorage.setItem("mamaearth-current-user", JSON.stringify(user))
     } else {
-      localStorage.removeItem("mamaearth-user")
+      localStorage.removeItem("mamaearth-current-user")
     }
   }, [user])
 
@@ -174,10 +79,6 @@ function App() {
     }
   }, [userProfile])
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }, [currentPage])
-
   const showNotification = (message, type = "success") => {
     const id = Date.now()
     const notification = { id, message, type }
@@ -185,27 +86,27 @@ function App() {
 
     setTimeout(() => {
       setNotifications((prev) => prev.filter((n) => n.id !== id))
-    }, 4000)
+    }, 3000)
   }
 
   const addToCart = (product, quantity = 1) => {
     setCartItems((prev) => {
       const existing = prev.find((item) => item.id === product.id)
       if (existing) {
-        showNotification(`Updated ${product.name} quantity in cart! 🛒`)
+        showNotification(`Updated ${product.name} quantity in cart`)
         return prev.map((item) => (item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item))
       } else {
-        showNotification(`${product.name} added to cart! 🌿`)
+        showNotification(`${product.name} added to cart`)
         return [...prev, { ...product, quantity }]
       }
     })
 
+    // Update user's tree count
     if (user) {
       setUser((prev) => ({
         ...prev,
         treesPlanted: (prev.treesPlanted || 0) + 1,
       }))
-      showNotification(`🌳 You planted a tree! Total: ${(user.treesPlanted || 0) + 1} trees`, "success")
     }
   }
 
@@ -229,10 +130,10 @@ function App() {
     setWishlistItems((prev) => {
       const exists = prev.find((item) => item.id === product.id)
       if (exists) {
-        showNotification(`${product.name} removed from wishlist 💔`, "info")
+        showNotification(`${product.name} removed from wishlist`, "info")
         return prev.filter((item) => item.id !== product.id)
       } else {
-        showNotification(`${product.name} added to wishlist! ❤️`)
+        showNotification(`${product.name} added to wishlist`)
         return [...prev, product]
       }
     })
@@ -255,33 +156,42 @@ function App() {
   }
 
   const handleProductRecommend = (products) => {
-    setPreviousPage(currentPage)
-    setCurrentPage("products")
+    handleNavigate("products") // Use the new handleNavigate
     setSearchQuery(products[0] || "")
     setIsAIAssistantOpen(false)
   }
 
-  const handleProductClick = (product) => {
-    setSelectedProduct(product)
-    setPreviousPage(currentPage)
-    setCurrentPage("product-detail")
-  }
-
-  const handleLogout = () => {
-    setUser(null)
-    setUserProfile(null)
-    setCartItems([])
-    setWishlistItems([])
-    showNotification("Successfully signed out! 👋", "info")
-  }
-
-  const handleNavigate = (page) => {
-    setPreviousPage(currentPage)
-    setCurrentPage(page)
+  // Updated navigation logic for correct history management
+  const handleNavigate = (pageId) => {
+    setCurrentPage(pageId)
+    setPageHistory((prevHistory) => {
+      // If navigating to a page already in history, truncate history to that point
+      const existingIndex = prevHistory.indexOf(pageId)
+      if (existingIndex !== -1 && existingIndex < prevHistory.length - 1) {
+        return prevHistory.slice(0, existingIndex + 1)
+      }
+      // If navigating to the current page, do nothing to history
+      if (prevHistory[prevHistory.length - 1] === pageId) {
+        return prevHistory
+      }
+      // Otherwise, add the new page to history
+      return [...prevHistory, pageId]
+    })
   }
 
   const handleGoBack = () => {
-    setCurrentPage(previousPage)
+    setPageHistory((prevHistory) => {
+      const newHistory = [...prevHistory]
+      if (newHistory.length > 1) {
+        newHistory.pop() // Remove the current page
+        const prevPage = newHistory[newHistory.length - 1] // Get the page before the one we just popped
+        setCurrentPage(prevPage)
+      } else {
+        // If we are at the first page in history (likely 'home'), stay there.
+        setCurrentPage("home")
+      }
+      return newHistory
+    })
   }
 
   const renderPage = () => {
@@ -293,7 +203,6 @@ function App() {
             addToCart={addToCart}
             addToWishlist={addToWishlist}
             wishlistItems={wishlistItems}
-            onProductClick={handleProductClick}
           />
         )
       case "products":
@@ -304,28 +213,11 @@ function App() {
             wishlistItems={wishlistItems}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
-            onProductClick={handleProductClick}
-          />
-        )
-      case "product-detail":
-        return (
-          <ProductDetailPage
-            product={selectedProduct}
-            onNavigate={handleNavigate}
-            onGoBack={handleGoBack}
-            onAddToCart={addToCart}
-            onAddToWishlist={addToWishlist}
-            isInWishlist={wishlistItems.some((item) => item.id === selectedProduct?.id)}
           />
         )
       case "wishlist":
         return (
-          <WishlistPage
-            wishlistItems={wishlistItems}
-            removeFromWishlist={removeFromWishlist}
-            addToCart={addToCart}
-            onProductClick={handleProductClick}
-          />
+          <WishlistPage wishlistItems={wishlistItems} removeFromWishlist={removeFromWishlist} addToCart={addToCart} />
         )
       case "signin":
         return <SignInPage onNavigate={handleNavigate} setUser={setUser} />
@@ -357,23 +249,28 @@ function App() {
             userProfile={userProfile}
             wishlistItems={wishlistItems}
             recommendations={recommendations}
-            onProductClick={handleProductClick}
           />
         )
       case "community":
         return (
-          <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 pt-24 pb-8">
+          <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 pt-20 pb-8">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
               <CommunitySection />
             </div>
           </div>
         )
       case "impact":
-        return <TreeTracker user={user} onNavigate={handleNavigate} />
-      case "profile":
-        return <ProfilePage user={user} onNavigate={handleNavigate} />
-      case "orders":
-        return <OrdersPage user={user} onNavigate={handleNavigate} />
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 pt-20 pb-8">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-8">
+                <h1 className="text-4xl font-bold text-white mb-4">Your Environmental Impact</h1>
+                <p className="text-xl text-gray-400">See how you're making a difference with every purchase</p>
+              </div>
+              <TreeTracker user={user} />
+            </div>
+          </div>
+        )
       default:
         return (
           <HomePage
@@ -381,22 +278,14 @@ function App() {
             addToCart={addToCart}
             addToWishlist={addToWishlist}
             wishlistItems={wishlistItems}
-            onProductClick={handleProductClick}
           />
         )
     }
   }
 
-  if (isLoading) {
-    return <LoadingPage progress={loadingProgress} />
-  }
-
-  if (!isOnline) {
-    return <OfflinePage onRetry={() => window.location.reload()} onGoHome={() => setCurrentPage("home")} />
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
+    <div className="min-h-screen bg-hero-pattern">
+      {/* Floating particles background */}
       <div className="floating-particles">
         <div className="particle"></div>
         <div className="particle"></div>
@@ -408,17 +297,22 @@ function App() {
         onNavigate={handleNavigate}
         onGoBack={handleGoBack}
         currentPage={currentPage}
-        previousPage={previousPage}
+        previousPage={pageHistory.length > 1 ? pageHistory[pageHistory.length - 2] : null}
         cartItemsCount={getCartItemsCount()}
         wishlistCount={wishlistItems.length}
         onCartClick={() => setIsCartOpen(true)}
         user={user}
-        onLogout={handleLogout}
+        onLogout={() => {
+          setUser(null)
+          localStorage.removeItem("mamaearth-current-user")
+          setPageHistory(["home"]) // Reset history on logout
+        }}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onAIAssistantOpen={() => setIsAIAssistantOpen(true)}
       />
 
+      {/* Main content - removed transition class for instant changes */}
       <main className="relative z-10">{renderPage()}</main>
 
       <Footer onNavigate={handleNavigate} />
@@ -429,7 +323,7 @@ function App() {
         cartItems={cartItems}
         onUpdateQuantity={updateCartQuantity}
         onRemoveFromCart={removeFromCart}
-        setCurrentPage={handleNavigate}
+        setCurrentPage={handleNavigate} // Use the new handleNavigate
       />
 
       <AIAssistant
@@ -438,17 +332,15 @@ function App() {
         onProductRecommend={handleProductRecommend}
       />
 
-      <div className="fixed top-20 right-4 z-50 space-y-3 max-w-sm">
+      {/* Notifications */}
+      <div className="fixed top-4 right-4 z-50 space-y-2">
         {notifications.map((notification) => (
-          <div key={notification.id} className="animate-slide-in-right">
-            <NotificationToast
-              message={notification.message}
-              type={notification.type}
-              onClose={() => setNotifications((prev) => prev.filter((n) => n.id !== notification.id))}
-            />
-          </div>
+          <NotificationToast key={notification.id} message={notification.message} type={notification.type} />
         ))}
       </div>
+
+      {/* Global Loading Spinner - Removed */}
+      {/* {isLoading && <LoadingSpinner />} */}
     </div>
   )
 }

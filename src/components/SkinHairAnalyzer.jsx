@@ -1,12 +1,13 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { Camera, Upload, Sparkles, ArrowRight, CheckCircle, Info, X } from "lucide-react"
+import { Camera, Upload, Sparkles, ArrowRight, CheckCircle, Info, X, ArrowLeft } from "lucide-react"
 import { Button } from "./ui/Button"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Badge } from "./ui/Badge"
 
 const SkinHairAnalyzer = ({ onNavigate, setUserProfile, showNotification, setRecommendations }) => {
+  // Removed setIsLoading
   const [currentStep, setCurrentStep] = useState(1)
   const [analysisType, setAnalysisType] = useState("")
   const [uploadedImage, setUploadedImage] = useState(null)
@@ -121,6 +122,7 @@ const SkinHairAnalyzer = ({ onNavigate, setUserProfile, showNotification, setRec
 
   const analyzeImage = async () => {
     setIsAnalyzing(true)
+    // setIsLoading(true) // Removed global loading
 
     // Simulate AI analysis with realistic delay
     setTimeout(() => {
@@ -185,6 +187,7 @@ const SkinHairAnalyzer = ({ onNavigate, setUserProfile, showNotification, setRec
         ...userAnswers,
       })
       setIsAnalyzing(false)
+      // setIsLoading(false) // Removed global loading
       setCurrentStep(4)
       showNotification("Analysis complete! Check your personalized recommendations 🎉", "success")
     }, 3000)
@@ -537,6 +540,16 @@ const SkinHairAnalyzer = ({ onNavigate, setUserProfile, showNotification, setRec
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 pt-20 pb-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Back Button */}
+        <Button
+          variant="ghost"
+          onClick={() => (currentStep > 1 ? setCurrentStep(currentStep - 1) : onNavigate("home"))}
+          className="mb-6 text-gray-300 hover:text-white"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          {currentStep === 1 ? "Back to Home" : "Previous Step"}
+        </Button>
+
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-4">🤖 AI Skin & Hair Analyzer</h1>
           <p className="text-xl text-gray-400">Get personalized product recommendations powered by AI</p>

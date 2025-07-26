@@ -124,7 +124,7 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
       location: "Mumbai",
       rating: 5,
       text: "As a dermatologist, I'm impressed by MamaEarth's scientific approach to natural skincare. The formulations are clinically sound and deliver real results.",
-      image: "/placeholder.svg?height=80&width=80&text=PS",
+      image: "/priya.webp",
       verified: true,
     },
     {
@@ -133,7 +133,7 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
       location: "Delhi",
       rating: 5,
       text: "I've tried hundreds of products, but MamaEarth's consistency in quality and effectiveness is unmatched. My skin has never looked better!",
-      image: "/placeholder.svg?height=80&width=80&text=AG",
+      image: "/ananya.webp",
       verified: true,
     },
     {
@@ -142,7 +142,7 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
       location: "Bangalore",
       rating: 5,
       text: "Finding safe, effective products for my family was challenging until I discovered MamaEarth. Now it's our go-to brand for everything!",
-      image: "/placeholder.svg?height=80&width=80&text=KM",
+      image: "/kavya.webp",
       verified: true,
     },
   ]
@@ -165,7 +165,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
         {/* Advanced Background */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-gray-900/95 via-black/90 to-gray-900/95" />
-
           {/* Animated Orbs */}
           <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-emerald-500/10 to-green-500/10 rounded-full blur-3xl animate-pulse" />
           <div
@@ -176,7 +175,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
             className="absolute bottom-20 left-1/4 w-80 h-80 bg-gradient-to-r from-pink-500/8 to-rose-500/8 rounded-full blur-3xl animate-pulse"
             style={{ animationDelay: "4s" }}
           />
-
           {/* Grid Pattern */}
           <div
             className="absolute inset-0 opacity-[0.02]"
@@ -206,7 +204,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
                     <span className="block gradient-text">Beauty,</span>
                     <span className="block text-5xl sm:text-6xl lg:text-7xl font-light text-gray-300">Made Safe</span>
                   </h1>
-
                   <p className="text-xl sm:text-2xl text-gray-300 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light">
                     Experience the perfect fusion of{" "}
                     <span className="text-emerald-400 font-semibold">ancient wisdom</span> and
@@ -227,7 +224,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
                   Discover Your Perfect Match
                   <ArrowRight className="h-6 w-6 ml-3 group-hover:translate-x-1 transition-transform" />
                 </Button>
-
                 <Button
                   onClick={() => onNavigate("products")}
                   variant="outline"
@@ -279,30 +275,12 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
                 {/* Main Product Showcase */}
                 <div className="relative overflow-hidden rounded-3xl glass-effect-strong p-8 border border-emerald-500/20 shadow-2xl">
                   <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-blue-500/5" />
-
                   <img
-                    src="/placeholder.svg?height=600&width=500&text=Premium+Natural+Skincare"
+                    src="/collection.jpg"
                     alt="Premium natural skincare collection"
                     className="w-full h-auto rounded-2xl shadow-2xl relative z-10"
                   />
-
-                  {/* Floating Elements */}
-                  {/* <div className="absolute -top-6 -right-6 bg-gradient-to-r from-emerald-500 to-green-500 text-white p-4 rounded-2xl shadow-xl animate-float">
-                    <Leaf className="h-8 w-8" />
-                  </div>
-
-                  <div
-                    className="absolute -bottom-6 -left-6 bg-gradient-to-r from-blue-500 to-purple-500 text-white p-3 rounded-xl shadow-xl animate-float"
-                    style={{ animationDelay: "1s" }}
-                  >
-                    <Shield className="h-6 w-6" />
-                  </div>
-
-                  <div className="absolute top-30 -right-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white p-3 rounded-full shadow-xl animate-bounce">
-                    <Star className="h-5 w-5" />
-                  </div> */}
                 </div>
-
                 {/* Certification Badges */}
                 <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-4">
                   {certifications.slice(0, 2).map((cert, index) => (
@@ -324,7 +302,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
       {/* Categories Section */}
       <section className="py-40 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/50 to-gray-800/50" />
-
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-24">
             <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 mb-8">
@@ -350,7 +327,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
                 <div className="relative overflow-hidden rounded-3xl glass-effect-strong border border-gray-700/50 hover:border-emerald-500/30 transition-all duration-500 h-full">
                   {/* Background Pattern */}
                   <div className="absolute inset-0 opacity-50" style={{ background: category.bgPattern }} />
-
                   <div className="relative p-10 text-center space-y-8 h-full flex flex-col justify-between">
                     <div>
                       <div className="text-5xl mb-8 group-hover:scale-110 transition-transform duration-300">
@@ -363,19 +339,16 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
                         {category.description}
                       </p>
                     </div>
-
                     <div className="space-y-6">
                       <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
                         {category.products} Premium Products
                       </Badge>
-
                       <div className="flex items-center justify-center text-emerald-400 group-hover:text-emerald-300 transition-colors">
                         <span className="text-sm font-medium mr-2">Explore Range</span>
                         <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </div>
                   </div>
-
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-emerald-500/5 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
                 </div>
@@ -388,7 +361,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
       {/* Featured Products */}
       <section className="py-40 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-800/50 to-gray-900/50" />
-
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-24">
             <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30 mb-8">
@@ -417,7 +389,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
                       alt={product.name}
                       className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
                     />
-
                     {/* Product Badges */}
                     <div className="absolute top-3 left-3 flex flex-col gap-2">
                       {product.originalPrice > product.price && (
@@ -429,7 +400,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
                         <Badge className="bg-yellow-500/90 text-white backdrop-blur-sm">⭐ Bestseller</Badge>
                       )}
                     </div>
-
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
@@ -441,7 +411,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
                         className={`h-5 w-5 ${isInWishlist(product.id) ? "text-red-500 fill-current" : "text-white"}`}
                       />
                     </button>
-
                     {/* Quick View Overlay */}
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <Button className="bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white hover:text-black">
@@ -514,7 +483,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
       {newProducts.length > 0 && (
         <section className="py-40 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-gray-900/50 to-black/50" />
-
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-24">
               <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 mb-8">
@@ -547,13 +515,11 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
                         🆕 New Launch
                       </Badge>
                     </div>
-
                     <div className="flex-1 flex flex-col space-y-6">
                       <h3 className="font-bold text-white text-xl line-clamp-2 group-hover:text-blue-400 transition-colors">
                         {product.name}
                       </h3>
                       <p className="text-gray-400 text-sm line-clamp-3 flex-1">{product.description}</p>
-
                       <div className="flex items-center justify-between pt-6">
                         <span className="text-2xl font-bold text-white">₹{product.price}</span>
                         <Button
@@ -575,10 +541,9 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
         </section>
       )}
 
-      {/* Testimonials */}
+      {/* Testimonials - FIXED IMAGE SIZING */}
       <section className="py-40 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-gray-900/50" />
-
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-24">
             <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30 mb-8">
@@ -601,21 +566,26 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
                     <Star key={i} className="h-8 w-8 text-yellow-400 fill-current" />
                   ))}
                 </div>
-
                 <blockquote className="text-2xl text-gray-300 italic leading-relaxed font-light max-w-4xl mx-auto">
                   "{testimonials[currentTestimonial].text}"
                 </blockquote>
-
                 <div className="flex items-center justify-center space-x-8">
-                  <img
-                    src={testimonials[currentTestimonial].image || "/placeholder.svg"}
-                    alt={testimonials[currentTestimonial].name}
-                    className="w-16 h-16 rounded-full border-2 border-emerald-500 shadow-lg"
-                  />
+                  {/* FIXED: Proper image sizing and aspect ratio */}
+                  <div className="relative w-20 h-20 flex-shrink-0">
+                    <img
+                      src={testimonials[currentTestimonial].image || "/placeholder.svg?height=80&width=80"}
+                      alt={testimonials[currentTestimonial].name}
+                      className="w-full h-full object-cover rounded-full border-3 border-emerald-500 shadow-lg"
+                    />
+                    {testimonials[currentTestimonial].verified && (
+                      <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center border-2 border-gray-900">
+                        <CheckCircle className="h-3 w-3 text-white" />
+                      </div>
+                    )}
+                  </div>
                   <div className="text-left">
                     <div className="flex items-center space-x-2">
                       <div className="font-bold text-white text-lg">{testimonials[currentTestimonial].name}</div>
-                      {testimonials[currentTestimonial].verified && <CheckCircle className="h-5 w-5 text-blue-400" />}
                     </div>
                     <div className="text-emerald-400 font-semibold">{testimonials[currentTestimonial].title}</div>
                     <div className="text-sm text-gray-400">{testimonials[currentTestimonial].location}</div>
@@ -623,7 +593,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
                 </div>
               </div>
             </div>
-
             <div className="flex justify-center mt-10 space-x-3">
               {testimonials.map((_, index) => (
                 <button
@@ -642,7 +611,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
       {/* Why Choose Us */}
       <section className="py-40 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/50 to-gray-800/50" />
-
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-24">
             <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 mb-8">
@@ -714,7 +682,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
         {/* Consistent Background with rest of the site */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-gray-800/50 to-black/50" />
-
           {/* Same animated orbs as hero section for consistency */}
           <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-emerald-500/8 to-green-500/8 rounded-full blur-3xl animate-pulse" />
           <div
@@ -725,7 +692,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
             className="absolute top-1/2 left-1/4 w-80 h-80 bg-gradient-to-r from-pink-500/6 to-rose-500/6 rounded-full blur-3xl animate-pulse"
             style={{ animationDelay: "4s" }}
           />
-
           {/* Same grid pattern for consistency */}
           <div
             className="absolute inset-0 opacity-[0.02]"
@@ -752,7 +718,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
                 <span className="block">Ready to Transform</span>
                 <span className="block gradient-text">Your Beauty Routine?</span>
               </h2>
-
               <p className="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto font-light">
                 Join over <span className="text-emerald-400 font-bold">2 million families</span> who have discovered the
                 perfect harmony of <span className="text-blue-400 font-bold">science and nature</span>. Experience
@@ -773,7 +738,6 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
                   <ArrowRight className="h-7 w-7 ml-4 group-hover:translate-x-2 transition-transform" />
                 </div>
               </Button>
-
               <Button
                 onClick={() => onNavigate("products")}
                 variant="outline"
@@ -796,9 +760,7 @@ const HomePage = ({ onNavigate, addToCart, addToWishlist, wishlistItems = [], on
                   <div className="text-lg font-bold text-white">Every Purchase Plants a Tree</div>
                   <div className="text-sm text-gray-400">Contributing to a greener planet</div>
                 </div>
-
                 <div className="text-4xl text-gray-600 hidden md:block text-center">→</div>
-
                 <div className="text-center space-y-4">
                   <div className="w-16 h-16 bg-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <Globe className="h-8 w-8 text-green-400" />

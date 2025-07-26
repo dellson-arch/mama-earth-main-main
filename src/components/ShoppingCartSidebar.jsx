@@ -1,174 +1,120 @@
 "use client"
 
-import { useState } from "react"
-import { X, Plus, Minus, ShoppingBag, Trash2 } from "lucide-react"
+import { X, ShoppingCart, Trash2, Minus, Plus, ArrowRight } from "lucide-react"
 import { Button } from "./ui/Button"
-import { Badge } from "./ui/Badge"
+import { Card, CardContent } from "./ui/card"
 
-const ShoppingCartSidebar = ({
-  isOpen,
-  onClose,
-  cartItems = [],
-  onUpdateQuantity,
-  onRemoveFromCart,
-  setCurrentPage,
-}) => {
-  const [isAnimating, setIsAnimating] = useState(false)
+const ShoppingCartSidebar = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRemoveFromCart, setCurrentPage }) => {
+  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
-  const handleClose = () => {
-    setIsAnimating(true)
-    setTimeout(() => {
-      onClose()
-      setIsAnimating(false)
-    }, 300)
-  }
-
-  const getTotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
-  }
-
-  const getTotalItems = () => {
-    return cartItems.reduce((total, item) => total + item.quantity, 0)
-  }
-
-  const handleCheckout = () => {
-    setCurrentPage("checkout")
+  const handleCheckoutClick = () => {
     onClose()
+    setCurrentPage("checkout")
   }
-
-  if (!isOpen && !isAnimating) return null
 
   return (
-    <>
-      {/* Backdrop */}
-      <div
-        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity duration-300 ${
-          isOpen && !isAnimating ? "opacity-100" : "opacity-0"
-        }`}
-        onClick={handleClose}
-      />
+    <div
+      className={`fixed inset-0 z-50 transform ${
+        isOpen ? "translate-x-0" : "translate-x-full"
+      } transition-transform duration-300 ease-in-out`}
+    >
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose}></div>
+      <div className="fixed right-0 top-0 h-full w-full max-w-md bg-gray-900/95 border-l border-gray-800/50 shadow-2xl flex flex-col">
+        <div className="flex items-center justify-between p-6 border-b border-gray-800/50">
+          <h2 className="text-3xl font-bold text-white flex items-center">
+            <ShoppingCart className="h-7 w-7 mr-3 text-green-400" />
+            Your Cart
+          </h2>
+          <Button variant="ghost" size="icon" onClick={onClose} className="text-gray-400 hover:text-white">
+            <X className="h-6 w-6" />
+          </Button>
+        </div>
 
-      {/* Sidebar */}
-      <div
-        className={`fixed right-0 top-0 h-full w-full max-w-md bg-gray-900 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
-          isOpen && !isAnimating ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-800">
-            <div className="flex items-center space-x-2">
-              <ShoppingBag className="h-6 w-6 text-green-400" />
-              <h2 className="text-xl font-semibold text-white">Shopping Cart</h2>
-              {cartItems.length > 0 && (
-                <Badge className="bg-green-600 text-white">
-                  {getTotalItems()} {getTotalItems() === 1 ? "item" : "items"}
-                </Badge>
-              )}
+        <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
+          {cartItems.length === 0 ? (
+            <div className="text-center py-12">
+              <ShoppingCart className="h-20 w-20 text-gray-600 mx-auto mb-6" />
+              <p className="text-gray-400 text-lg">Your cart is empty.</p>
+              <Button
+                onClick={() => {
+                  onClose()
+                  setCurrentPage("products")
+                }}
+                className="mt-6 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold px-8 py-3 rounded-xl shadow-lg shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300"
+              >
+                Start Shopping
+              </Button>
             </div>
-            <button
-              onClick={handleClose}
-              className="p-2 text-gray-400 hover:text-white transition-colors rounded-full hover:bg-gray-800"
-            >
-              <X className="h-6 w-6" />
-            </button>
-          </div>
-
-          {/* Cart Items */}
-          <div className="flex-1 overflow-y-auto p-6">
-            {cartItems.length === 0 ? (
-              <div className="text-center py-12">
-                <ShoppingBag className="h-16 w-16 text-gray-600 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-400 mb-2">Your cart is empty</h3>
-                <p className="text-gray-500 mb-6">Add some products to get started!</p>
-                <Button
-                  onClick={() => {
-                    setCurrentPage("products")
-                    onClose()
-                  }}
-                  className="bg-green-600 hover:bg-green-700 text-white"
-                >
-                  Browse Products
-                </Button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {cartItems.map((item) => (
-                  <div key={item.id} className="glass-effect rounded-lg p-4">
-                    <div className="flex items-start space-x-4">
-                      <img
-                        src={item.image || "/placeholder.svg?height=80&width=80&text=Product"}
-                        alt={item.name}
-                        className="w-16 h-16 object-cover rounded-lg"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-sm font-medium text-white line-clamp-2 mb-1">{item.name}</h3>
-                        <div className="flex items-center space-x-2 mb-2">
-                          <span className="text-lg font-bold text-green-400">₹{item.price}</span>
-                          {item.originalPrice && item.originalPrice > item.price && (
-                            <span className="text-xs text-gray-500 line-through">₹{item.originalPrice}</span>
-                          )}
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <button
-                              onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
-                              className="p-1 text-gray-400 hover:text-white transition-colors rounded"
-                              disabled={item.quantity <= 1}
-                            >
-                              <Minus className="h-4 w-4" />
-                            </button>
-                            <span className="text-white font-medium w-8 text-center">{item.quantity}</span>
-                            <button
-                              onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                              className="p-1 text-gray-400 hover:text-white transition-colors rounded"
-                            >
-                              <Plus className="h-4 w-4" />
-                            </button>
-                          </div>
-                          <button
-                            onClick={() => onRemoveFromCart(item.id)}
-                            className="p-1 text-red-400 hover:text-red-300 transition-colors rounded"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
+          ) : (
+            <div className="space-y-6">
+              {cartItems.map((item) => (
+                <Card key={item.id} className="bg-gray-800/50 border-gray-700/50 text-white rounded-xl shadow-md">
+                  <CardContent className="p-4 flex items-center space-x-4">
+                    <img
+                      src={item.image || "/placeholder.svg"}
+                      alt={item.name}
+                      className="w-20 h-20 object-cover rounded-lg"
+                    />
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg text-white">{item.name}</h3>
+                      <p className="text-gray-400 text-sm">₹{item.price.toFixed(2)} each</p>
+                      <div className="flex items-center mt-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+                          className="h-8 w-8 rounded-full border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:text-white"
+                        >
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                        <span className="mx-3 text-white font-medium">{item.quantity}</span>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                          className="h-8 w-8 rounded-full border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:text-white"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Footer */}
-          {cartItems.length > 0 && (
-            <div className="border-t border-gray-800 p-6 space-y-4">
-              <div className="flex items-center justify-between text-lg font-semibold">
-                <span className="text-gray-300">Total:</span>
-                <span className="text-white">₹{getTotal().toFixed(2)}</span>
-              </div>
-              <div className="space-y-2">
-                <Button onClick={handleCheckout} className="w-full bg-green-600 hover:bg-green-700 text-white">
-                  Proceed to Checkout
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setCurrentPage("products")
-                    onClose()
-                  }}
-                  className="w-full border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
-                >
-                  Continue Shopping
-                </Button>
-              </div>
-              <p className="text-xs text-gray-500 text-center">Free shipping on orders over ₹500</p>
+                    <div className="flex flex-col items-end space-y-2">
+                      <span className="text-xl font-bold text-green-400">
+                        ₹{(item.price * item.quantity).toFixed(2)}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onRemoveFromCart(item.id)}
+                        className="text-red-400 hover:bg-red-400/10"
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           )}
         </div>
+
+        {cartItems.length > 0 && (
+          <div className="p-6 border-t border-gray-800/50 space-y-4">
+            <div className="flex justify-between items-center text-white text-2xl font-bold">
+              <span>Total:</span>
+              <span>₹{total.toFixed(2)}</span>
+            </div>
+            <Button
+              onClick={handleCheckoutClick}
+              className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold px-8 py-4 rounded-2xl shadow-lg shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 text-lg flex items-center justify-center space-x-2"
+            >
+              <span>Proceed to Checkout</span>
+              <ArrowRight className="h-5 w-5" />
+            </Button>
+          </div>
+        )}
       </div>
-    </>
+    </div>
   )
 }
 

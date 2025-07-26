@@ -1,126 +1,141 @@
 "use client"
 
-import { Leaf, Sparkles, Shield, Award, ArrowRight } from "lucide-react"
+import { Leaf, Shield, Heart, Users, Factory, Globe } from "lucide-react"
 import { Button } from "./ui/Button"
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 
 const AboutUsPage = ({ onNavigate }) => {
   return (
-    <div className="space-y-12 animate-fade-in">
-      {/* Hero Section: Founder's Story */}
-      <Card className="glass-effect border-gray-700/50 overflow-hidden shadow-2xl">
-        <div className="relative bg-gradient-to-br from-green-600/20 to-blue-600/20 p-8 sm:p-12 text-center">
-          <div className="absolute inset-0 opacity-10">
-            <Leaf className="h-full w-full text-green-500 animate-float-slow" />
-          </div>
-          <div className="relative z-10 space-y-6">
-            <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-green-500 shadow-lg animate-bounceIn">
-              <img
-                src="/placeholder.svg?height=128&width=128&text=Meera+Sharma"
-                alt="Meera Sharma, Founder of MamaEarth"
-                className="w-full h-full object-cover"
-              />
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 pt-24 pb-12 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-green-500/5 rounded-full blur-3xl animate-pulse"></div>
+        <div
+          className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse"
+          style={{ animationDelay: "2s" }}
+        ></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Hero Section */}
+        <section className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-green-100 to-white bg-clip-text text-transparent">
+            Our Story: Nurturing Nature, Nurturing You
+          </h1>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            At MamaEarth, we believe in the power of nature to heal and nourish. We are committed to creating safe,
+            natural, and effective products for your entire family.
+          </p>
+        </section>
+
+        {/* Mission & Vision */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 items-center">
+          <div className="glass-effect rounded-3xl p-8 shadow-xl border border-gray-700/50 hover:border-green-500/30 transition-all duration-300">
+            <div className="w-16 h-16 bg-gradient-to-r from-green-600 to-green-700 rounded-xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <Leaf className="h-8 w-8 text-white" />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
-              Meet Our Founder,{" "}
-              <span className="bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 bg-clip-text text-transparent">
-                Meera Sharma
-              </span>
-            </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              The visionary behind MamaEarth's natural revolution, driven by a mother's love and a passion for safe,
-              toxin-free products.
+            <h2 className="text-3xl font-bold text-white mb-4 text-center">Our Mission</h2>
+            <p className="text-gray-300 leading-relaxed text-center">
+              To provide toxin-free, natural, and safe products for babies and mamas, ensuring a healthier future for
+              all. We strive to make goodness a habit, one product at a time.
+            </p>
+          </div>
+          <div className="glass-effect rounded-3xl p-8 shadow-xl border border-gray-700/50 hover:border-blue-500/30 transition-all duration-300">
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <Globe className="h-8 w-8 text-white" />
+            </div>
+            <h2 className="text-3xl font-bold text-white mb-4 text-center">Our Vision</h2>
+            <p className="text-gray-300 leading-relaxed text-center">
+              To be the leading natural personal care brand globally, known for our commitment to safety, transparency,
+              and sustainability, empowering families to make healthier choices.
+            </p>
+          </div>
+        </section>
+
+        {/* Key Pillars */}
+        <section className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent">
+              What Makes Us Different
+            </h2>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+              Our core values guide everything we do, from sourcing ingredients to delivering products to your door.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="glass-effect rounded-3xl p-8 text-center shadow-lg hover:shadow-xl hover:shadow-green-500/20 transition-all duration-300 border border-gray-700/50 hover:border-green-500/30">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-600 to-green-700 rounded-xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <Shield className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-3">MadeSafe Certified</h3>
+              <p className="text-gray-400 leading-relaxed">
+                India's first brand to be MadeSafe certified, ensuring our products are free from harmful chemicals.
+              </p>
+            </div>
+            <div className="glass-effect rounded-3xl p-8 text-center shadow-lg hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 border border-gray-700/50 hover:border-blue-500/30">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <Heart className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-3">Natural Ingredients</h3>
+              <p className="text-gray-400 leading-relaxed">
+                We use the best of nature, carefully selected for their purity and effectiveness.
+              </p>
+            </div>
+            <div className="glass-effect rounded-3xl p-8 text-center shadow-lg hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-300 border border-gray-700/50 hover:border-purple-500/30">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <Users className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-3">For the Family</h3>
+              <p className="text-gray-400 leading-relaxed">
+                Products designed for everyone, from newborns to adults, ensuring gentle care for all.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Our Impact */}
+        <section className="text-center mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white via-green-100 to-white bg-clip-text text-transparent">
+              Our Commitment to the Planet
+            </h2>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+              Every purchase with MamaEarth contributes to a greener, healthier planet.
+            </p>
+          </div>
+          <div className="glass-effect rounded-3xl p-8 shadow-xl border border-gray-700/50 hover:border-emerald-500/30 transition-all duration-300 max-w-3xl mx-auto">
+            <div className="w-20 h-20 bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <Factory className="h-10 w-10 text-white" />
+            </div>
+            <h3 className="text-3xl font-bold text-white mb-4">Planting Goodness</h3>
+            <p className="text-gray-300 leading-relaxed mb-6">
+              We are proud to be a plastic-positive brand, recycling more plastic than we use. With every order, we
+              plant a tree, contributing to a sustainable future.
             </p>
             <Button
-              onClick={() => onNavigate("products")}
-              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold px-8 py-4 rounded-2xl shadow-lg shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 transform hover:scale-105"
+              onClick={() => onNavigate("impact")}
+              className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold px-8 py-3 rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300"
             >
-              <Sparkles className="h-5 w-5 mr-2" />
-              Explore Our Products
+              See Your Impact
             </Button>
           </div>
-        </div>
-      </Card>
+        </section>
 
-      {/* The Inspiration Story */}
-      <Card className="glass-effect border-gray-700/50 shadow-lg">
-        <CardHeader>
-          <CardTitle className="flex items-center text-white text-2xl">
-            <Leaf className="h-6 w-6 mr-3 text-green-400" />
-            The Seed of Inspiration
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6 text-gray-300 text-lg leading-relaxed">
-          <p>
-            MamaEarth was born from a very personal journey. As new parents, Meera and her husband struggled to find
-            safe, toxin-free baby products in India. Concerned about the harmful chemicals prevalent in most brands,
-            they realized there was a significant gap in the market for genuinely natural and safe alternatives.
-          </p>
-          <p>
-            This personal struggle ignited a mission: to create a brand that parents could trust implicitly. Meera
-            envisioned a world where families wouldn't have to compromise on safety or quality when it came to their
-            daily essentials. She embarked on a journey to formulate products using the purest natural ingredients,
-            backed by science, and certified by international standards like MadeSafe.
-          </p>
-          <p>
-            From baby care, MamaEarth expanded into skincare and haircare for adults, always adhering to the philosophy
-            of "Goodness Inside." Every product is a testament to Meera's unwavering commitment to health, safety, and
-            the environment.
-          </p>
-        </CardContent>
-      </Card>
-
-      {/* Our Core Values */}
-      <Card className="glass-effect border-gray-700/50 shadow-lg">
-        <CardHeader>
-          <CardTitle className="flex items-center text-white text-2xl">
-            <Award className="h-6 w-6 mr-3 text-yellow-400" />
-            Our Unwavering Commitments
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-xl bg-gradient-to-br from-green-600/10 to-green-800/10 border border-green-600/30 text-center shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105">
-              <Shield className="h-12 w-12 text-green-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-white mb-2">MadeSafe Certified</h3>
-              <p className="text-gray-300 text-sm">
-                India's first brand to be certified by MadeSafe, ensuring our products are free from harmful toxins.
-              </p>
-            </div>
-            <div className="p-6 rounded-xl bg-gradient-to-br from-blue-600/10 to-blue-800/10 border border-blue-600/30 text-center shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105">
-              <Leaf className="h-12 w-12 text-blue-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-white mb-2">Planting Goodness</h3>
-              <p className="text-gray-300 text-sm">
-                For every order, we plant a tree, contributing to a greener planet and a sustainable future.
-              </p>
-            </div>
-            <div className="p-6 rounded-xl bg-gradient-to-br from-purple-600/10 to-purple-800/10 border border-purple-600/30 text-center shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105">
-              <Sparkles className="h-12 w-12 text-purple-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-white mb-2">Natural & Effective</h3>
-              <p className="text-gray-300 text-sm">
-                Harnessing the power of nature with scientifically proven formulations for visible results.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Join Our Mission Call to Action */}
-      <Card className="glass-effect border-gray-700/50 bg-gradient-to-r from-green-600/10 via-blue-600/10 to-purple-600/10 relative overflow-hidden shadow-lg">
-        <CardContent className="p-8 text-center space-y-4">
-          <h3 className="text-3xl font-bold text-white">Be a Part of Our Story</h3>
-          <p className="text-gray-300 max-w-2xl mx-auto text-lg">
-            Join the MamaEarth family and experience the goodness of nature while contributing to a healthier planet.
+        {/* Call to Action */}
+        <section className="text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+            Join the MamaEarth Family
+          </h2>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed mb-8">
+            Experience the difference of natural, safe, and effective products.
           </p>
           <Button
-            onClick={() => onNavigate("impact")}
-            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold px-10 py-4 rounded-2xl shadow-xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 transform hover:scale-105 text-lg"
+            onClick={() => onNavigate("products")}
+            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold px-12 py-4 rounded-2xl shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 transform hover:scale-105 text-lg"
           >
-            <ArrowRight className="h-5 w-5 mr-2" />
-            See Our Impact
+            Explore Our Products
           </Button>
-        </CardContent>
-      </Card>
+        </section>
+      </div>
     </div>
   )
 }

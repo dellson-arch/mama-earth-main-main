@@ -1,33 +1,56 @@
 "use client"
 
-import { CheckCircle, AlertCircle, Info, X } from "lucide-react"
+import { CheckCircle, Info, XCircle } from "lucide-react"
+import { useEffect, useState } from "react"
 
-const NotificationToast = ({ message, type = "success", onClose }) => {
-  const icons = {
-    success: CheckCircle,
-    error: AlertCircle,
-    info: Info,
+const NotificationToast = ({ message, type = "success" }) => {
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    setIsVisible(true)
+    const timer = setTimeout(() => {
+      setIsVisible(false)
+    }, 2700) // Hide slightly before parent removes it
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  const getIcon = () => {
+    switch (type) {
+      case "success":
+        return <CheckCircle className="h-5 w-5 text-green-400" />
+      case "info":
+        return <Info className="h-5 w-5 text-blue-400" />
+      case "error":
+        return <XCircle className="h-5 w-5 text-red-400" />
+      default:
+        return <Info className="h-5 w-5 text-gray-400" />
+    }
   }
 
-  const colors = {
-    success: "bg-green-600 border-green-500",
-    error: "bg-red-600 border-red-500",
-    info: "bg-blue-600 border-blue-500",
+  const getBgColor = () => {
+    switch (type) {
+      case "success":
+        return "bg-green-900/70 border-green-700/50"
+      case "info":
+        return "bg-blue-900/70 border-blue-700/50"
+      case "error":
+        return "bg-red-900/70 border-red-700/50"
+      default:
+        return "bg-gray-900/70 border-gray-700/50"
+    }
   }
-
-  const Icon = icons[type]
 
   return (
     <div
-      className={`${colors[type]} text-white px-4 py-3 rounded-lg shadow-lg flex items-center space-x-3 min-w-[300px] animate-slide-in`}
+      className={`flex items-center gap-3 p-4 rounded-xl shadow-lg backdrop-blur-md border ${getBgColor()} transition-all duration-300 ease-out ${
+        isVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+      }`}
+      role="alert"
+      aria-live="assertive"
     >
-      <Icon className="h-5 w-5 flex-shrink-0" />
-      <span className="flex-1 text-sm font-medium">{message}</span>
-      {onClose && (
-        <button onClick={onClose} className="text-white/80 hover:text-white">
-          <X className="h-4 w-4" />
-        </button>
-      )}
+      {getIcon()}
+      <span className="text-white text-sm font-medium">{message}</span>
     </div>
   )
 }

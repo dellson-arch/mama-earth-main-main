@@ -1,322 +1,130 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { X, Send, Bot, Camera } from "lucide-react"
+import { useState } from "react"
+import { X, Send, Bot, Sparkles } from "lucide-react"
 import { Button } from "./ui/Button"
 import { Input } from "./ui/Input"
-import { CardContent, CardHeader, CardTitle } from "./ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 
 const AIAssistant = ({ isOpen, onClose, onProductRecommend }) => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      type: "bot",
-      content:
-        "Hi! I'm your MamaEarth beauty assistant! 🌿 I can help you find the perfect natural products for your skin and hair. What's your concern today?",
-      timestamp: new Date(),
+      sender: "ai",
+      text: "Hello! I'm your MamaEarth AI Assistant. How can I help you today? I can recommend products, answer questions about ingredients, or help with your skin/hair concerns.",
     },
   ])
-  const [inputMessage, setInputMessage] = useState("")
-  const [isTyping, setIsTyping] = useState(false)
-  const messagesEndRef = useRef(null)
+  const [input, setInput] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
-  const quickQuestions = [
-    { text: "Best products for acne", icon: "🌟", concern: "acne" },
-    { text: "Hair fall solutions", icon: "💇‍♀️", concern: "hair-fall" },
-    { text: "Dry skin remedies", icon: "💧", concern: "dry-skin" },
-    { text: "Natural anti-aging", icon: "✨", concern: "anti-aging" },
-  ]
+  const handleSend = async (e) => {
+    e.preventDefault()
+    if (input.trim() === "") return
 
-  const productDatabase = {
-    acne: [
-      { name: "Tea Tree Face Wash", price: 399, rating: 4.5 },
-      { name: "Neem Face Serum", price: 599, rating: 4.3 },
-      { name: "Charcoal Face Mask", price: 299, rating: 4.4 },
-    ],
-    "hair-fall": [
-      { name: "Onion Hair Oil", price: 399, rating: 4.6 },
-      { name: "Bhringraj Shampoo", price: 349, rating: 4.4 },
-      { name: "Rice Water Hair Mask", price: 449, rating: 4.2 },
-    ],
-    "dry-skin": [
-      { name: "Aloe Vera Gel", price: 249, rating: 4.5 },
-      { name: "Vitamin C Moisturizer", price: 549, rating: 4.3 },
-      { name: "Coconut Oil Body Lotion", price: 399, rating: 4.4 },
-    ],
-    "anti-aging": [
-      { name: "Vitamin C Face Serum", price: 699, rating: 4.7 },
-      { name: "Retinol Night Cream", price: 899, rating: 4.5 },
-      { name: "Collagen Face Mask", price: 499, rating: 4.3 },
-    ],
-  }
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
-
-  const generateBotResponse = (userMessage) => {
-    const lowerMessage = userMessage.toLowerCase()
-
-    // Check for specific concerns
-    if (lowerMessage.includes("acne") || lowerMessage.includes("pimple") || lowerMessage.includes("breakout")) {
-      return {
-        content:
-          "I understand you're dealing with acne! 🌿 Here are some amazing natural products that can help clear your skin:",
-        products: productDatabase.acne,
-        concern: "acne",
-      }
-    }
-
-    if (lowerMessage.includes("hair fall") || lowerMessage.includes("hair loss") || lowerMessage.includes("thinning")) {
-      return {
-        content:
-          "Hair fall can be frustrating! 💚 These natural products have helped thousands of customers strengthen their hair:",
-        products: productDatabase["hair-fall"],
-        concern: "hair-fall",
-      }
-    }
-
-    if (lowerMessage.includes("dry skin") || lowerMessage.includes("moistur") || lowerMessage.includes("hydrat")) {
-      return {
-        content: "Dry skin needs extra love! 💧 These hydrating products will restore your skin's natural moisture:",
-        products: productDatabase["dry-skin"],
-        concern: "dry-skin",
-      }
-    }
-
-    if (lowerMessage.includes("aging") || lowerMessage.includes("wrinkle") || lowerMessage.includes("fine line")) {
-      return {
-        content: "Let's fight those signs of aging naturally! ✨ These anti-aging products are perfect for you:",
-        products: productDatabase["anti-aging"],
-        concern: "anti-aging",
-      }
-    }
-
-    if (lowerMessage.includes("photo") || lowerMessage.includes("picture") || lowerMessage.includes("image")) {
-      return {
-        content:
-          "Great idea! 📸 You can upload a photo using our AI Skin Analyzer. It will analyze your skin and give you personalized recommendations. Would you like me to take you there?",
-        hasAction: true,
-        actionText: "Open AI Analyzer",
-        actionType: "analyzer",
-      }
-    }
-
-    // Default responses
-    const defaultResponses = [
-      "That's a great question! Can you tell me more about your specific skin or hair concerns? I'm here to help you find the perfect natural solution! 🌿",
-      "I'd love to help you with that! Could you share more details about what you're looking for? Are you dealing with any specific skin or hair issues?",
-      "Thanks for asking! To give you the best recommendations, could you tell me about your skin type or any particular concerns you have?",
-    ]
-
-    return {
-      content: defaultResponses[Math.floor(Math.random() * defaultResponses.length)],
-    }
-  }
-
-  const handleSendMessage = async (message = inputMessage) => {
-    if (!message.trim()) return
-
-    const userMessage = {
-      id: Date.now(),
-      type: "user",
-      content: message,
-      timestamp: new Date(),
-    }
-
+    const userMessage = { id: messages.length + 1, sender: "user", text: input }
     setMessages((prev) => [...prev, userMessage])
-    setInputMessage("")
-    setIsTyping(true)
+    setInput("")
+    setIsLoading(true)
 
-    // Simulate typing delay
+    // Simulate AI response
     setTimeout(() => {
-      const botResponse = generateBotResponse(message)
-      const botMessage = {
-        id: Date.now() + 1,
-        type: "bot",
-        content: botResponse.content,
-        products: botResponse.products,
-        concern: botResponse.concern,
-        hasAction: botResponse.hasAction,
-        actionText: botResponse.actionText,
-        actionType: botResponse.actionType,
-        timestamp: new Date(),
+      let aiResponse = ""
+      const lowerInput = userMessage.text.toLowerCase()
+
+      if (lowerInput.includes("skin type") || lowerInput.includes("skin concern")) {
+        aiResponse =
+          "To give you the best recommendations for your skin, I suggest you try our personalized Skin & Hair Analyzer. Would you like to go there now?"
+        // Trigger navigation to analyzer
+        setTimeout(() => {
+          if (window) {
+            window.dispatchEvent(new CustomEvent("navigate-to-analyzer"))
+          }
+        }, 2000)
+      } else if (lowerInput.includes("hair fall") || lowerInput.includes("hair growth")) {
+        aiResponse =
+          "For hair fall and growth concerns, our Onion Hair Oil and Onion Shampoo are highly effective. They are made with natural ingredients to strengthen hair and reduce breakage. Would you like me to recommend these products?"
+        onProductRecommend(["Onion Hair Oil", "Onion Shampoo"])
+      } else if (lowerInput.includes("vitamin c serum") || lowerInput.includes("brightening")) {
+        aiResponse =
+          "Our Vitamin C Face Serum is a bestseller for brightening and reducing dark spots. It's packed with natural Vitamin C and Turmeric for a radiant glow. Would you like me to recommend this product?"
+        onProductRecommend(["Vitamin C Face Serum"])
+      } else if (lowerInput.includes("ubtan face wash") || lowerInput.includes("tan removal")) {
+        aiResponse =
+          "The Ubtan Face Wash is perfect for deep cleansing and tan removal, giving you a natural glow with ingredients like Turmeric and Saffron. Would you like me to recommend this product?"
+        onProductRecommend(["Ubtan Face Wash"])
+      } else if (lowerInput.includes("natural ingredients") || lowerInput.includes("toxin free")) {
+        aiResponse =
+          "MamaEarth is India's first MadeSafe certified brand, ensuring all our products are 100% natural and toxin-free. We are committed to providing safe and effective solutions for your family."
+      } else if (lowerInput.includes("hello") || lowerInput.includes("hi")) {
+        aiResponse = "Hi there! How can I assist you with your natural beauty journey today?"
+      } else if (lowerInput.includes("thank you") || lowerInput.includes("thanks")) {
+        aiResponse = "You're most welcome! Is there anything else I can help you with?"
+      } else {
+        aiResponse =
+          "I'm still learning! Could you please rephrase your question or ask about specific products or concerns? For personalized recommendations, try our Skin & Hair Analyzer."
       }
 
-      setMessages((prev) => [...prev, botMessage])
-      setIsTyping(false)
+      setMessages((prev) => [...prev, { id: prev.length + 1, sender: "ai", text: aiResponse }])
+      setIsLoading(false)
     }, 1500)
-  }
-
-  const handleQuickQuestion = (question) => {
-    handleSendMessage(question.text)
-  }
-
-  const handleProductRecommend = (products) => {
-    onProductRecommend(products.map((p) => p.name))
-  }
-
-  const handleAction = (actionType) => {
-    if (actionType === "analyzer") {
-      onClose()
-      // This would navigate to analyzer - we'll handle this in the parent component
-      window.dispatchEvent(new CustomEvent("navigate-to-analyzer"))
-    }
   }
 
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-end p-4">
-      <div className="w-full max-w-md h-[600px] glass-effect border border-gray-700 rounded-lg shadow-2xl flex flex-col">
-        {/* Header */}
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-gray-700">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
-              <Bot className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <CardTitle className="text-lg text-white">AI Beauty Assistant</CardTitle>
-              <p className="text-xs text-green-400">Online • Ready to help</p>
-            </div>
-          </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+      <Card className="w-full max-w-md bg-gray-900/95 border-gray-700/50 text-white rounded-3xl shadow-2xl flex flex-col h-[80vh] max-h-[600px]">
+        <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-gray-700/50">
+          <CardTitle className="text-2xl font-bold flex items-center text-white">
+            <Bot className="h-6 w-6 mr-2 text-green-400" />
+            AI Assistant
+          </CardTitle>
           <Button variant="ghost" size="icon" onClick={onClose} className="text-gray-400 hover:text-white">
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </Button>
         </CardHeader>
-
-        {/* Messages */}
-        <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.map((message) => (
-            <div key={message.id} className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}>
+        <CardContent className="flex-1 overflow-y-auto p-6 custom-scrollbar space-y-4">
+          {messages.map((msg) => (
+            <div key={msg.id} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
               <div
-                className={`max-w-[80%] rounded-lg p-3 ${
-                  message.type === "user"
-                    ? "bg-green-600 text-white"
-                    : "bg-gray-800 text-gray-100 border border-gray-700"
+                className={`max-w-[75%] p-3 rounded-xl ${
+                  msg.sender === "user"
+                    ? "bg-green-600 text-white rounded-br-none"
+                    : "bg-gray-800 text-gray-100 rounded-bl-none"
                 }`}
               >
-                <div className="flex items-start space-x-2">
-                  {message.type === "bot" && <Bot className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />}
-                  <div className="flex-1">
-                    <p className="text-sm">{message.content}</p>
-
-                    {/* Product Recommendations */}
-                    {message.products && (
-                      <div className="mt-3 space-y-2">
-                        {message.products.map((product, index) => (
-                          <div key={index} className="bg-gray-700/50 rounded-lg p-2 border border-gray-600">
-                            <div className="flex justify-between items-center">
-                              <div>
-                                <p className="text-sm font-medium text-white">{product.name}</p>
-                                <div className="flex items-center space-x-2 mt-1">
-                                  <span className="text-green-400 font-semibold">₹{product.price}</span>
-                                  <span className="text-yellow-400 text-xs">★ {product.rating}</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                        <Button
-                          size="sm"
-                          onClick={() => handleProductRecommend(message.products)}
-                          className="w-full bg-green-600 hover:bg-green-700 mt-2"
-                        >
-                          View All Products
-                        </Button>
-                      </div>
-                    )}
-
-                    {/* Action Buttons */}
-                    {message.hasAction && (
-                      <Button
-                        size="sm"
-                        onClick={() => handleAction(message.actionType)}
-                        className="mt-2 bg-green-600 hover:bg-green-700"
-                      >
-                        <Camera className="h-3 w-3 mr-1" />
-                        {message.actionText}
-                      </Button>
-                    )}
-                  </div>
-                </div>
+                {msg.text}
               </div>
             </div>
           ))}
-
-          {/* Typing Indicator */}
-          {isTyping && (
+          {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-gray-800 border border-gray-700 rounded-lg p-3 max-w-[80%]">
+              <div className="max-w-[75%] p-3 rounded-xl bg-gray-800 text-gray-100 rounded-bl-none">
                 <div className="flex items-center space-x-2">
-                  <Bot className="h-4 w-4 text-green-400" />
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce" />
-                    <div
-                      className="w-2 h-2 bg-green-400 rounded-full animate-bounce"
-                      style={{ animationDelay: "0.1s" }}
-                    />
-                    <div
-                      className="w-2 h-2 bg-green-400 rounded-full animate-bounce"
-                      style={{ animationDelay: "0.2s" }}
-                    />
-                  </div>
+                  <Sparkles className="h-4 w-4 animate-pulse text-green-400" />
+                  <span>Typing...</span>
                 </div>
               </div>
             </div>
           )}
-          <div ref={messagesEndRef} />
         </CardContent>
-
-        {/* Quick Questions */}
-        {messages.length === 1 && (
-          <div className="px-4 pb-2">
-            <p className="text-xs text-gray-400 mb-2">Quick questions:</p>
-            <div className="grid grid-cols-2 gap-2">
-              {quickQuestions.map((question, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleQuickQuestion(question)}
-                  className="text-xs border-gray-600 text-gray-300 hover:bg-gray-800 bg-transparent justify-start"
-                >
-                  <span className="mr-1">{question.icon}</span>
-                  {question.text}
-                </Button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Input */}
-        <div className="p-4 border-t border-gray-700">
-          <div className="flex space-x-2">
-            <Input
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              placeholder="Ask about skin or hair concerns..."
-              className="flex-1 bg-gray-800/50 border-gray-700 text-white placeholder-gray-400"
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  handleSendMessage()
-                }
-              }}
-            />
-            <Button
-              onClick={() => handleSendMessage()}
-              disabled={!inputMessage.trim() || isTyping}
-              className="bg-green-600 hover:bg-green-700"
-            >
-              <Send className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </div>
+        <form onSubmit={handleSend} className="p-6 border-t border-gray-700/50 flex items-center gap-3">
+          <Input
+            placeholder="Ask me anything..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            className="flex-1 bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-green-500 focus:ring-green-500/20 rounded-xl py-2 px-4"
+            disabled={isLoading}
+          />
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="bg-green-600 hover:bg-green-700 text-white rounded-xl px-4 py-2"
+          >
+            <Send className="h-5 w-5" />
+          </Button>
+        </form>
+      </Card>
     </div>
   )
 }

@@ -15,11 +15,10 @@ import NotificationToast from "./components/NotificationToast"
 import AIAssistant from "./components/AIAssistant"
 import TreeTracker from "./components/TreeTracker"
 import CommunitySection from "./components/CommunitySection"
-// import LoadingSpinner from "./components/LoadingSpinner" // Removed as per request
+import ProductDetailModal from "./components/ProductDetailModal"
 
 function App() {
   const [currentPage, setCurrentPage] = useState("home")
-  const [pageHistory, setPageHistory] = useState(["home"]) // Initialize with home
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isAIAssistantOpen, setIsAIAssistantOpen] = useState(false)
   const [cartItems, setCartItems] = useState([])
@@ -29,26 +28,55 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("")
   const [userProfile, setUserProfile] = useState(null)
   const [recommendations, setRecommendations] = useState([])
-  // Removed isTransitioning state as per request for instant transitions
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false)
 
   // Load data from localStorage
   useEffect(() => {
     const savedCart = localStorage.getItem("mamaearth-cart")
     const savedWishlist = localStorage.getItem("mamaearth-wishlist")
-    const savedUser = localStorage.getItem("mamaearth-current-user")
+    const savedUser = localStorage.getItem("mamaearth-user")
     const savedProfile = localStorage.getItem("mamaearth-profile")
 
-    if (savedCart) setCartItems(JSON.parse(savedCart))
-    if (savedWishlist) setWishlistItems(JSON.parse(savedWishlist))
-    if (savedUser) {
-      const currentUser = JSON.parse(savedUser)
-      setUser(currentUser)
+    if (savedCart) {
+      try {
+        setCartItems(JSON.parse(savedCart))
+      } catch (error) {
+        console.error("Error parsing cart data:", error)
+        localStorage.removeItem("mamaearth-cart")
+      }
     }
-    if (savedProfile) setUserProfile(JSON.parse(savedProfile))
+
+    if (savedWishlist) {
+      try {
+        setWishlistItems(JSON.parse(savedWishlist))
+      } catch (error) {
+        console.error("Error parsing wishlist data:", error)
+        localStorage.removeItem("mamaearth-wishlist")
+      }
+    }
+
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser))
+      } catch (error) {
+        console.error("Error parsing user data:", error)
+        localStorage.removeItem("mamaearth-user")
+      }
+    }
+
+    if (savedProfile) {
+      try {
+        setUserProfile(JSON.parse(savedProfile))
+      } catch (error) {
+        console.error("Error parsing profile data:", error)
+        localStorage.removeItem("mamaearth-profile")
+      }
+    }
 
     // Listen for custom navigation events
     const handleNavigateToAnalyzer = () => {
-      handleNavigate("analyzer") // Use the new handleNavigate
+      setCurrentPage("analyzer")
       setIsAIAssistantOpen(false)
     }
 
@@ -56,26 +84,42 @@ function App() {
     return () => window.removeEventListener("navigate-to-analyzer", handleNavigateToAnalyzer)
   }, [])
 
-  // Save to localStorage
+  // Save to localStorage with error handling
   useEffect(() => {
-    localStorage.setItem("mamaearth-cart", JSON.stringify(cartItems))
+    try {
+      localStorage.setItem("mamaearth-cart", JSON.stringify(cartItems))
+    } catch (error) {
+      console.error("Error saving cart data:", error)
+    }
   }, [cartItems])
 
   useEffect(() => {
-    localStorage.setItem("mamaearth-wishlist", JSON.stringify(wishlistItems))
+    try {
+      localStorage.setItem("mamaearth-wishlist", JSON.stringify(wishlistItems))
+    } catch (error) {
+      console.error("Error saving wishlist data:", error)
+    }
   }, [wishlistItems])
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("mamaearth-current-user", JSON.stringify(user))
-    } else {
-      localStorage.removeItem("mamaearth-current-user")
+    try {
+      if (user) {
+        localStorage.setItem("mamaearth-user", JSON.stringify(user))
+      } else {
+        localStorage.removeItem("mamaearth-user")
+      }
+    } catch (error) {
+      console.error("Error saving user data:", error)
     }
   }, [user])
 
   useEffect(() => {
-    if (userProfile) {
-      localStorage.setItem("mamaearth-profile", JSON.stringify(userProfile))
+    try {
+      if (userProfile) {
+        localStorage.setItem("mamaearth-profile", JSON.stringify(userProfile))
+      }
+    } catch (error) {
+      console.error("Error saving profile data:", error)
     }
   }, [userProfile])
 
@@ -156,42 +200,14 @@ function App() {
   }
 
   const handleProductRecommend = (products) => {
-    handleNavigate("products") // Use the new handleNavigate
+    setCurrentPage("products")
     setSearchQuery(products[0] || "")
     setIsAIAssistantOpen(false)
   }
 
-  // Updated navigation logic for correct history management
-  const handleNavigate = (pageId) => {
-    setCurrentPage(pageId)
-    setPageHistory((prevHistory) => {
-      // If navigating to a page already in history, truncate history to that point
-      const existingIndex = prevHistory.indexOf(pageId)
-      if (existingIndex !== -1 && existingIndex < prevHistory.length - 1) {
-        return prevHistory.slice(0, existingIndex + 1)
-      }
-      // If navigating to the current page, do nothing to history
-      if (prevHistory[prevHistory.length - 1] === pageId) {
-        return prevHistory
-      }
-      // Otherwise, add the new page to history
-      return [...prevHistory, pageId]
-    })
-  }
-
-  const handleGoBack = () => {
-    setPageHistory((prevHistory) => {
-      const newHistory = [...prevHistory]
-      if (newHistory.length > 1) {
-        newHistory.pop() // Remove the current page
-        const prevPage = newHistory[newHistory.length - 1] // Get the page before the one we just popped
-        setCurrentPage(prevPage)
-      } else {
-        // If we are at the first page in history (likely 'home'), stay there.
-        setCurrentPage("home")
-      }
-      return newHistory
-    })
+  const handleProductClick = (product) => {
+    setSelectedProduct(product)
+    setIsProductModalOpen(true)
   }
 
   const renderPage = () => {
@@ -199,10 +215,11 @@ function App() {
       case "home":
         return (
           <HomePage
-            onNavigate={handleNavigate}
+            onNavigate={setCurrentPage}
             addToCart={addToCart}
             addToWishlist={addToWishlist}
             wishlistItems={wishlistItems}
+            onProductClick={handleProductClick}
           />
         )
       case "products":
@@ -213,19 +230,26 @@ function App() {
             wishlistItems={wishlistItems}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
+            onProductClick={handleProductClick}
           />
         )
       case "wishlist":
         return (
-          <WishlistPage wishlistItems={wishlistItems} removeFromWishlist={removeFromWishlist} addToCart={addToCart} />
+          <WishlistPage
+            wishlistItems={wishlistItems}
+            removeFromWishlist={removeFromWishlist}
+            addToCart={addToCart}
+            onNavigate={setCurrentPage}
+            onProductClick={handleProductClick}
+          />
         )
       case "signin":
-        return <SignInPage onNavigate={handleNavigate} setUser={setUser} />
+        return <SignInPage onNavigate={setCurrentPage} setUser={setUser} />
       case "checkout":
         return (
           <CheckoutPage
             cartItems={cartItems}
-            onNavigate={handleNavigate}
+            onNavigate={setCurrentPage}
             user={user}
             total={getCartTotal()}
             clearCart={() => setCartItems([])}
@@ -234,7 +258,7 @@ function App() {
       case "analyzer":
         return (
           <SkinHairAnalyzer
-            onNavigate={handleNavigate}
+            onNavigate={setCurrentPage}
             setUserProfile={setUserProfile}
             showNotification={showNotification}
             setRecommendations={setRecommendations}
@@ -243,12 +267,13 @@ function App() {
       case "recommendations":
         return (
           <RecommendationsPage
-            onNavigate={handleNavigate}
+            onNavigate={setCurrentPage}
             addToCart={addToCart}
             addToWishlist={addToWishlist}
             userProfile={userProfile}
             wishlistItems={wishlistItems}
             recommendations={recommendations}
+            onProductClick={handleProductClick}
           />
         )
       case "community":
@@ -274,10 +299,11 @@ function App() {
       default:
         return (
           <HomePage
-            onNavigate={handleNavigate}
+            onNavigate={setCurrentPage}
             addToCart={addToCart}
             addToWishlist={addToWishlist}
             wishlistItems={wishlistItems}
+            onProductClick={handleProductClick}
           />
         )
     }
@@ -285,8 +311,12 @@ function App() {
 
   return (
     <div className="min-h-screen bg-hero-pattern">
-      {/* Floating particles background */}
+      {/* Enhanced Floating particles background */}
       <div className="floating-particles">
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
         <div className="particle"></div>
         <div className="particle"></div>
         <div className="particle"></div>
@@ -294,28 +324,21 @@ function App() {
       </div>
 
       <Header
-        onNavigate={handleNavigate}
-        onGoBack={handleGoBack}
-        currentPage={currentPage}
-        previousPage={pageHistory.length > 1 ? pageHistory[pageHistory.length - 2] : null}
+        onNavigate={setCurrentPage}
         cartItemsCount={getCartItemsCount()}
         wishlistCount={wishlistItems.length}
         onCartClick={() => setIsCartOpen(true)}
         user={user}
-        onLogout={() => {
-          setUser(null)
-          localStorage.removeItem("mamaearth-current-user")
-          setPageHistory(["home"]) // Reset history on logout
-        }}
+        onLogout={() => setUser(null)}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        currentPage={currentPage}
         onAIAssistantOpen={() => setIsAIAssistantOpen(true)}
       />
 
-      {/* Main content - removed transition class for instant changes */}
       <main className="relative z-10">{renderPage()}</main>
 
-      <Footer onNavigate={handleNavigate} />
+      <Footer onNavigate={setCurrentPage} />
 
       <ShoppingCartSidebar
         isOpen={isCartOpen}
@@ -323,7 +346,7 @@ function App() {
         cartItems={cartItems}
         onUpdateQuantity={updateCartQuantity}
         onRemoveFromCart={removeFromCart}
-        setCurrentPage={handleNavigate} // Use the new handleNavigate
+        setCurrentPage={setCurrentPage}
       />
 
       <AIAssistant
@@ -332,15 +355,21 @@ function App() {
         onProductRecommend={handleProductRecommend}
       />
 
-      {/* Notifications */}
-      <div className="fixed top-4 right-4 z-50 space-y-2">
+      <ProductDetailModal
+        isOpen={isProductModalOpen}
+        onClose={() => setIsProductModalOpen(false)}
+        product={selectedProduct}
+        onAddToCart={addToCart}
+        onAddToWishlist={addToWishlist}
+        isInWishlist={selectedProduct ? wishlistItems.some((item) => item.id === selectedProduct.id) : false}
+      />
+
+      {/* Enhanced Notifications */}
+      <div className="fixed top-24 right-4 z-50 space-y-2">
         {notifications.map((notification) => (
           <NotificationToast key={notification.id} message={notification.message} type={notification.type} />
         ))}
       </div>
-
-      {/* Global Loading Spinner - Removed */}
-      {/* {isLoading && <LoadingSpinner />} */}
     </div>
   )
 }
